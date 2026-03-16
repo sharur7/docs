@@ -1,0 +1,203 @@
+---
+title: "Flux Dev"
+description: "> A high-quality image generation model designed for photorealistic visuals, illustration, and creative workflows."
+---
+
+## About the Provider
+Black Forest Labs is an AI research company founded by the creators of the original Stable Diffusion model. They focus on building state-of-the-art open-weight image generation models, with FLUX.1 as their flagship model family combining frontier image quality with open-weight accessibility for research and commercial use.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `flux-dev` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `flux-dev` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```py Python theme={null}
+import requests
+import json
+
+url = "https://platform.qubrid.com/v1/images/generations"
+headers = {
+    "Authorization": "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json"
+}
+
+data = {
+  "model": "flux-dev",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "num_inference_steps": 28,
+  "guidance": 3.5,
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "image_size": 1024,
+  "output_format": "jpg",
+  "output_quality": 80
+}
+
+response = requests.post(url, headers=headers, json=data)
+
+if response.status_code == 200:
+    with open("generated_image.png", "wb") as f:
+        f.write(response.content)
+        print("Image saved to generated_image.png")
+else:
+    print(f"Error: {response.status_code}")
+    print(response.text)
+```
+
+```js JavaScript theme={null}
+const body = {
+  "model": "flux-dev",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "num_inference_steps": 28,
+  "guidance": 3.5,
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "image_size": 1024,
+  "output_format": "jpg",
+  "output_quality": 80
+};
+
+const res = await fetch("https://platform.qubrid.com/v1/images/generations", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(body)
+});
+
+const result = await res.json();
+console.log(result);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/images/generations"
+
+	data := map[string]interface{}{
+		"model":               "flux-dev",
+		"prompt":              "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+		"num_inference_steps": 28,
+		"guidance":            3.5,
+		"seed":                -1,
+		"aspect_ratio":        "1:1",
+		"image_size":          1024,
+		"output_format":       "jpg",
+		"output_quality":      80,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/images/generations" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "flux-dev",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "num_inference_steps": 28,
+  "guidance": 3.5,
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "image_size": 1024,
+  "output_format": "jpg",
+  "output_quality": 80
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**FLUX.1 [dev]** is a 12 billion parameter rectified flow transformer developed by Black Forest Labs.
+- It uses a hybrid architecture combining MMDiT (Multi-Modal Diffusion Transformer) and SingleDiT blocks, with dual text encoders — CLIP ViT-L/14 (77 tokens) for global semantic alignment and T5-v1.1-XXL (up to 512 tokens) for rich, nuanced language understanding.
+- A 16-channel VAE (4× more channels than SDXL) enables higher fidelity latent representations, and the model uses Rotary Positional Encoding (RoPE) with a Flow Matching Euler Discrete scheduler. It is guidance-distilled from FLUX.1 [pro], achieving near-pro quality at significantly lower inference cost.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                                                        |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Model ID       | `flux-dev`                                                                                                                     |
+| Provider       | Black Forest Labs                                                                                                              |
+| Architecture   | Rectified flow transformer — hybrid MMDiT + SingleDiT blocks with RoPE and Flow Matching Euler Discrete scheduler             |
+| Model Size     | 12B parameters (~23GB in bf16)                                                                                                 |
+| Context Length | N/A                                                                                                                            |
+| Release Date   | August 2024                                                                                                                    |
+| License        | FLUX.1-dev Non-Commercial License                                                                                              |
+| Training Data  | Not publicly disclosed                                                                                                         |
+
+### When to use?
+
+You should consider using **FLUX.1 [dev]** if:
+
+- You need photorealistic image generation
+- Your application requires digital illustration and concept art
+- You are creating marketing and branding creatives
+- Your use case involves photography and portrait generation
+- You need a base model for research and fine-tuning with LoRA or ControlNet
+
+### Inference Parameters
+
+| Parameter Name | Type   | Default | Description                                                                                              |
+|----------------|--------|---------|----------------------------------------------------------------------------------------------------------|
+| Inference Steps | number | 28     | Number of denoising steps. More steps yield higher quality but slower generation.                        |
+| Guidance Scale | number | 3.5     | How closely the model follows the prompt. Higher values produce more literal interpretation of the text. |
+| Seed           | number | -1      | Random seed for reproducible generation. Use -1 for random.                                              |
+| Aspect Ratio   | string | 1:1     | Aspect ratio of the output image. Options: 1:1, 16:9, 21:9, 3:2, 2:3, 4:5, 5:4, 3:4, 4:3, 9:16, 9:21. |
+| Image Size     | number | 1024    | Base size in pixels for the longest side of the output image.                                            |
+| Output Format  | string | jpg     | Format of the generated image. Options: png, jpg, webp.                                                  |
+| Output Quality | number | 80      | Compression quality for jpg/webp output (1–100). Higher values retain more detail.                       |
+
+### Key Features
+
+- **12B Parameters with State-of-the-Art Quality:** Dual text encoders (CLIP L/14 + T5-v1.1-XXL) for deep prompt understanding and high-fidelity output.
+- **16-Channel VAE:** 4× more channels than SDXL for higher fidelity latent image representations.
+- **Hybrid MMDiT + SingleDiT Architecture:** Combines multi-modal and single-stream diffusion transformer blocks for efficient high-quality generation.
+- **Wide Aspect Ratio and Resolution Support:** Supports 11 aspect ratios and flexible image sizes up to 1024px.
+- **Open Weights:** Compatible with LoRA, ControlNet, and fine-tuning for domain-specific customization.
+- **Guidance Distilled from FLUX.1 [pro]:** Near-pro quality at significantly lower inference cost.
+
+## Summary
+
+**FLUX.1 [dev]** is Black Forest Labs' open-weight rectified flow transformer built for photorealistic image generation.
+- It uses a hybrid MMDiT + SingleDiT architecture with 12B parameters, dual text encoders, and a 16-channel VAE for high-fidelity outputs.
+- It supports 11 aspect ratios, flexible image sizes, and is compatible with LoRA and ControlNet for fine-tuning.
+- The model is guidance-distilled from FLUX.1 [pro], delivering near-pro quality at lower inference cost.
+- Licensed under the FLUX.1-dev Non-Commercial License.

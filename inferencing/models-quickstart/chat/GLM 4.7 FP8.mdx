@@ -1,0 +1,215 @@
+---
+title: "GLM 4.7 FP8"
+description: "> A high-capacity MoE reasoning model optimized for agentic coding, complex analysis, and long-horizon tasks."
+---
+
+## About the Provider
+Z.ai (formerly Zhipu AI) is a Chinese AI research company focused on building large-scale open-source foundation models for reasoning, coding, and agentic workflows. Through its open-weights initiative, Z.ai develops frontier models that deliver state-of-the-art performance on mathematical reasoning, software engineering, and long-horizon tool orchestration tasks.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `zai-org/GLM-4.7-FP8` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `zai-org/GLM-4.7-FP8` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="zai-org/GLM-4.7-FP8",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=4096,
+    temperature=0.6,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'zai-org/GLM-4.7-FP8',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 4096,
+  temperature: 0.6,
+  top_p: 1,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "zai-org/GLM-4.7-FP8",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.6,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "zai-org/GLM-4.7-FP8",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**GLM-4.7-FP8** is Z.ai's new-generation flagship model with 355B total parameters and 32B activated per forward pass, introducing three novel thinking paradigms — Interleaved Thinking, Preserved Thinking, and Turn-level Thinking.
+- These enable the model to reason before every action and maintain coherent reasoning state across long coding sessions, making it uniquely suited for agentic coding workflows with tools like Claude Code, Cline, and Roo Code.
+- It achieves 95.7% on AIME 2025, 73.8% on SWE-bench, and 87.4% on τ²-Bench, delivering frontier-level mathematical and software engineering performance at open-source scale.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                              |
+|----------------|------------------------------------------------------------------------------------------------------|
+| Model ID       | `zai-org/GLM-4.7-FP8`                                                                                |
+| Provider       | Z.ai (formerly Zhipu AI)                                                                             |
+| Architecture   | Sparse MoE Transformer — 355B total / 32B active per token, FP8 native quantization                 |
+| Model Size     | 355B Total / 32B Active                                                                              |
+| Parameters     | 5                                                                                                    |
+| Context Length | 128K Tokens                                                                                          |
+
+
+### When to use?
+
+You should consider using **GLM-4.7-FP8** if:
+
+- You need agentic multilingual coding with coherent long-session reasoning
+- Your application requires terminal-based task automation
+- You are building vibe coding and UI generation workflows
+- Your use case involves complex mathematical reasoning at competition level
+- You need tool orchestration with Claude Code, Cline, or Roo Code
+- Your workflow requires long-horizon multi-turn tasks with preserved reasoning state
+
+### Inference Parameters
+
+| Parameter Name  | Type    | Default | Description                                                                                              |
+|-----------------|---------|---------|----------------------------------------------------------------------------------------------------------|
+| Streaming       | boolean | true    | Enable streaming responses for real-time output.                                                         |
+| Temperature     | number  | 0.6     | Controls randomness. Lower values recommended for reasoning and coding.                                  |
+| Max Tokens      | number  | 4096    | Maximum number of tokens to generate.                                                                    |
+| Top P           | number  | 1       | Controls nucleus sampling.                                                                               |
+| Enable Thinking | boolean | true    | Enable Interleaved Thinking mode. The model thinks before every response and tool call for improved accuracy. |
+
+### Key Features
+
+- **Interleaved Thinking:** The model reasons before every response and tool call, improving accuracy on multi-step agentic tasks.
+- **Preserved Thinking:** Reasoning state is retained across coding sessions, enabling coherent long-horizon task execution.
+- **Turn-level Thinking Control:** Thinking can be toggled per request, giving developers precise control over reasoning depth and latency.
+- **95.7% AIME 2025:** State-of-the-art mathematical reasoning performance on the 2025 American Invitational Mathematics Examination.
+- **73.8% SWE-bench:** Frontier-level software engineering benchmark performance at open-source scale.
+- **355B MoE with FP8:** Sparse activation with only 32B parameters active per token, combined with FP8 native quantization for efficient inference.
+
+## Summary
+
+**GLM-4.7-FP8** is Z.ai's flagship open-source model, purpose-built for agentic coding and long-horizon reasoning.
+- It uses a 355B sparse MoE Transformer with 32B active parameters and FP8 native quantization, introducing Interleaved, Preserved, and Turn-level Thinking.
+- It achieves 95.7% on AIME 2025, 73.8% on SWE-bench, and 87.4% on τ²-Bench across reasoning and software engineering benchmarks.
+- The model supports agentic tool orchestration with Claude Code, Cline, and Roo Code, with preserved reasoning state across long coding sessions.

@@ -1,0 +1,224 @@
+---
+title: "DeepSeek V3.2"
+description: "> GPT-5-class open-source model — 685B MoE with novel Sparse Attention, gold-medal IMO & IOI 2025 results, and integrated reasoning with tool use."
+---
+
+## About the Provider
+DeepSeek is a Chinese AI research company based in Hangzhou focused on building frontier open-source language models. The company emphasizes open innovation in AI, publishing models and research under permissive licenses to make powerful language models widely accessible and support collaborative development in the global AI community.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `deepseek-ai/DeepSeek-V3.2` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `deepseek-ai/DeepSeek-V3.2` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="deepseek-ai/DeepSeek-V3.2",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'deepseek-ai/DeepSeek-V3.2',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 8192,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "deepseek-ai/DeepSeek-V3.2",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "deepseek-ai/DeepSeek-V3.2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**DeepSeek-V3.2** is DeepSeek's frontier open-source model with 685B total parameters and novel DeepSeek Sparse Attention (DSA) that reduces long-context computational cost by 50%.
+- Trained with a scalable RL framework, it achieves performance comparable to GPT-5, earning gold-medal results at the 2025 IMO and IOI competitions.
+- The model integrates reasoning and tool-use capabilities through large-scale agentic synthesis, making it suitable for complex multi-step workflows and long-horizon automation.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                              |
+|----------------|------------------------------------------------------------------------------------------------------|
+| Model ID       | `deepseek-ai/DeepSeek-V3.2`                                                                          |
+| Provider       | DeepSeek                                                                                             |
+| Architecture   | Mixture-of-Experts (MoE) Transformer with DeepSeek Sparse Attention (DSA) — 685B total parameters   |
+| Model Size     | 685B Total                                                                                           |
+| Parameters     | 4                                                                                                    |
+| Context Length | 128K Tokens                                                                                          |
+| Release Date   | 2025                                                                                                 |
+| License        | MIT                                                                                                  |
+| Training Data  | Large-scale multilingual dataset with scalable RL framework for reasoning and agentic tool-use       |
+
+### When to use?
+
+You should consider using **DeepSeek-V3.2** if:
+
+- You need advanced reasoning and complex agent tasks
+- Your application requires long-horizon agentic tool use
+- You are solving mathematical competition-level problems (IMO/IOI)
+- Your use case involves code generation and complex debugging
+- You need enterprise automation with integrated reasoning
+- Your workflow involves long-context document analysis
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                         |
+|----------------|---------|---------|-----------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.    |
+| Temperature    | number  | 1       | Recommended 1.0 for optimal performance.            |
+| Max Tokens     | number  | 8192    | Maximum number of tokens to generate.               |
+| Top P          | number  | 0.95    | Controls nucleus sampling.                          |
+
+### Key Features
+
+- **DeepSeek Sparse Attention (DSA):** Novel attention mechanism that reduces long-context computational cost by 50% versus standard attention.
+- **GPT-5-Class Performance:** Achieves frontier-level results on reasoning benchmarks, matching the performance of proprietary closed models.
+- **IMO & IOI Gold Medal:** Earns gold-medal-level results at the 2025 International Mathematical Olympiad and International Olympiad in Informatics.
+- **Integrated Reasoning & Tool Use:** Reasoning capabilities are synthesized directly into agentic tool-use workflows via large-scale RL training.
+- **685B MoE Architecture:** Efficient sparse inference enabling frontier capability with manageable active parameter counts.
+- **MIT License:** Fully open-source with unrestricted commercial use.
+
+### Limitations
+
+- **128K Max Context:** Shorter context window compared to some competing frontier models.
+- **Infrastructure Requirements:** Requires H100/H200-class GPU infrastructure for full deployment.
+- **No Official Chat Template:** No official Jinja chat template — custom encoding required for direct use.
+- **Tool Calling Warm-up:** Function calling may need a warm-up phase on cold-start deployments.
+
+## Summary
+
+**DeepSeek-V3.2** is DeepSeek's most capable open-source model, delivering GPT-5-class performance with efficient sparse inference.
+- It uses a 685B MoE Transformer with DeepSeek Sparse Attention, cutting long-context compute costs by 50%.
+- It achieves gold-medal results at IMO 2025 and IOI 2025, with integrated reasoning and tool-use via RL synthesis.
+- The model supports 128K context, streaming inference, and agentic workflows with function calling.
+- Licensed under MIT for full commercial use.

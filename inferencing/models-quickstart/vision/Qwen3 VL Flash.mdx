@@ -1,0 +1,257 @@
+---
+title: 'Qwen3 VL Flash'
+description: "> A lightweight vision-language model optimized for real-time image analysis, document reading, and low-latency visual applications."
+---
+
+## About the Provider
+Alibaba Cloud is the cloud computing arm of Alibaba Group and the creator of the Qwen model family. Through its open-source initiative, Alibaba has released state-of-the-art language and multimodal models under permissive licenses, enabling developers and enterprises to build powerful AI applications across diverse domains and languages.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `Qwen/Qwen3-VL-Flash` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `Qwen/Qwen3-VL-Flash` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-VL-Flash",
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "What is in this image? Describe the main elements."
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens=16384,
+    temperature=0.1,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'Qwen/Qwen3-VL-Flash',
+  messages: [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What is in this image? Describe the main elements."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+          }
+        }
+      ]
+    }
+  ],
+  max_tokens: 16384,
+  temperature: 0.1,
+  top_p: 1,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-VL-Flash",
+		"messages": []map[string]interface{}{
+			{
+				"role": "user",
+				"content": []map[string]interface{}{
+					{
+						"type": "text",
+						"text": "What is in this image? Describe the main elements.",
+					},
+					{
+						"type": "image_url",
+						"image_url": map[string]string{
+							"url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg",
+						},
+					},
+				},
+			},
+		},
+		"max_tokens":  16384,
+		"temperature": 0.1,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-VL-Flash",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What is in this image? Describe the main elements."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 16384,
+  "temperature": 0.1,
+  "stream": true,
+  "top_p": 1
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3 VL Flash** is a faster, lighter vision model for real-time use cases.
+- Built on the same Transformer decoder-only architecture with ViT visual encoder as Qwen3 VL Plus, it is optimized for low-latency inference with up to 256K token context.
+- Designed for live document reading, quick image analysis, and production pipelines where speed and cost efficiency are the priority.
+
+### Model at a Glance
+
+| Feature        | Details                                                        |
+|----------------|----------------------------------------------------------------|
+| Model ID       | `Qwen/Qwen3-VL-Flash`                                          |
+| Provider       | Alibaba Cloud (Qwen Team)                                      |
+| Architecture   | Transformer decoder-only (Qwen3-VL with ViT visual encoder)   |
+| Model Size     | N/A                                                            |
+| Parameters     | 5                                                              |
+| Context Length | Up to 256K Tokens                                              |
+| Release Date   | 2025                                                           |
+| License        | Apache 2.0                                                     |
+| Training Data  | Multilingual multimodal dataset (text + images)                |
+
+### When to use?
+
+You should consider using **Qwen3 VL Flash** if:
+
+- You need live document reading for receipts, forms, or on-screen content streamed from cameras
+- Your application requires quick image analysis in dashboards, monitoring tools, and low-latency user interfaces
+
+### Inference Parameters
+
+| Parameter Name   | Type    | Default | Description                                                                                              |
+|------------------|---------|---------|----------------------------------------------------------------------------------------------------------|
+| Streaming        | boolean | true    | Enable streaming responses for real-time output.                                                         |
+| Temperature      | number  | 0.1     | Lower temperature for more deterministic output.                                                         |
+| Max Tokens       | number  | 16384   | Maximum number of tokens the model can generate.                                                         |
+| Top P            | number  | 1       | Controls nucleus sampling for more predictable output.                                                   |
+| Reasoning Effort | select  | medium  | Adjusts the depth of reasoning and problem-solving effort. Higher settings yield more thorough responses at the cost of latency. |
+
+### Key Features
+
+- **Fast and Low Latency:** Optimized for real-time image analysis and low-latency production pipelines.
+- **ViT Visual Encoder:** Dedicated vision transformer encoder for accurate image feature extraction.
+- **Up to 256K Context:** Supports extended multimodal conversations and document processing.
+- **Low Cost:** $0.05 input / $0.40 output per 1M tokens — highly cost-effective for high-volume vision workloads.
+- **Apache 2.0 License:** Fully open-source with unrestricted commercial use.
+
+## Summary
+
+**Qwen3 VL Flash** is Alibaba's fastest vision-language model, built for real-time and cost-efficient multimodal inference.
+- It uses a Transformer decoder-only architecture with a ViT visual encoder, trained on a multilingual multimodal dataset.
+- It is optimized for live document reading, quick image analysis, and low-latency dashboards and monitoring tools.
+- The model supports up to 256K context with configurable reasoning effort at minimal cost ($0.05/$0.40 per 1M tokens).
+- Licensed under Apache 2.0 for full commercial use.

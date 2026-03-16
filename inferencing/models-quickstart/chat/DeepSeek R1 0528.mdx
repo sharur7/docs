@@ -1,0 +1,219 @@
+---
+title: "DeepSeek R1 0528"
+description: "> DeepSeek's frontier reasoning model — matching OpenAI o1 on AIME 2025, with chain-of-thought traces, JSON output, and function calling support."
+---
+
+## About the Provider
+DeepSeek is a Chinese artificial intelligence company based in Hangzhou, Zhejiang that focuses on research and development of large language models and advanced AI technologies. The firm emphasizes open innovation in AI, publishing models and research under permissive licenses to make powerful language models widely accessible and support collaborative development in the global AI community.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `deepseek-ai/DeepSeek-R1-0528` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `deepseek-ai/DeepSeek-R1-0528` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```py Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="deepseek-ai/DeepSeek-R1-0528",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=16384,
+    temperature=0.6,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'deepseek-ai/DeepSeek-R1-0528',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 16384,
+  temperature: 0.6,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "deepseek-ai/DeepSeek-R1-0528",
+		"messages": []map[string]interface{}{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.6,
+		"max_tokens":  16384,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "deepseek-ai/DeepSeek-R1-0528",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.6,
+  "max_tokens": 16384,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**DeepSeek-R1-0528** is the May 2025 update to the original DeepSeek-R1, built on the DeepSeek-V3 backbone with 671B total parameters and 37B active per inference pass (MoE).
+- It achieves 87.5% on AIME 2025 — up from 70% in the previous version — reaching performance on par with OpenAI o1, with reduced hallucinations and enhanced front-end capabilities.
+- This update adds JSON output and function calling support for the first time, making it suitable for structured agentic workflows in addition to advanced reasoning tasks.
+
+---
+
+## Model at a Glance
+
+| Feature        | Details                                                                                              |
+|----------------|------------------------------------------------------------------------------------------------------|
+| Model ID       | `deepseek-ai/DeepSeek-R1-0528`                                                                       |
+| Provider       | DeepSeek                                                                                             |
+| Architecture   | Mixture-of-Experts (MoE) Transformer — 671B total / 37B active per token, DeepSeek-V3 backbone      |
+| Model Size     | 671B Total / 37B Active                                                                              |
+| Context Length | 128K Tokens                                                                                          |
+| Release Date   | May 2025                                                                                             |
+| License        | MIT                                                                                                  |
+| Training Data  | Large-scale multilingual dataset with reinforcement learning for chain-of-thought reasoning          |
+
+## When to use?
+
+You should consider using **DeepSeek-R1-0528** if:
+
+- You need advanced mathematical reasoning and problem solving
+- Your application requires code generation and debugging
+- You are building complex multi-step reasoning pipelines
+- Your use case involves research and in-depth analysis
+- You need JSON-structured output generation
+- Your workflow requires function calling and tool use
+
+---
+
+## Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                                                        |
+|----------------|---------|---------|------------------------------------------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.                                   |
+| Temperature    | number  | 0.6     | Recommended range 0.5–0.7 (0.6 default) to prevent endless repetitions.           |
+| Max Tokens     | number  | 16384   | Maximum number of tokens to generate.                                              |
+| Top P          | number  | 0.95    | Nucleus sampling.                                                                  |
+
+## Key Features
+
+- **87.5% AIME 2025**: Up +17.5% from the previous DeepSeek-R1, matching OpenAI o1 on mathematical reasoning.
+- **JSON Output & Function Calling**: Newly added structured output and tool use support for agentic workflows.
+- **Reduced Hallucinations**: Improved factual accuracy and consistency over the original R1.
+- **Chain-of-Thought Reasoning**: Visible reasoning traces for interpretable multi-step problem solving.
+- **671B MoE Architecture**: Frontier-level reasoning with only 37B parameters active per token.
+- **MIT License**: Fully open-source with unrestricted commercial use.
+
+---
+
+## Summary
+
+**DeepSeek-R1-0528** is the latest reasoning model from DeepSeek, delivering OpenAI o1-level performance at open-source scale.
+- It uses a 671B MoE Transformer with 37B active parameters, built on the DeepSeek-V3 backbone with RL-based chain-of-thought training.
+- It scores 87.5% on AIME 2025 and introduces JSON output and function calling for the first time in the R1 series.
+- The model supports 128K context, visible reasoning traces, and a recommended temperature range of 0.5–0.7.
+- Licensed under MIT for full commercial use.

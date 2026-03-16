@@ -1,0 +1,189 @@
+---
+title: "Flux 2 Klein 4B"
+description: "> A lightweight image generation model optimized for fast text-to-image creation and real-time editing workflows."
+---
+
+## About the Provider
+Black Forest Labs is an AI research company founded by the creators of the original Stable Diffusion model. They focus on building state-of-the-art open-weight image generation models, with FLUX.1 as their flagship model family combining frontier image quality with open-weight accessibility for research and commercial use.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `flux-2-klein-4b` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `flux-2-klein-4b` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```py Python theme={null}
+import requests
+import json
+
+url = "https://platform.qubrid.com/v1/images/generations"
+headers = {
+    "Authorization": "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json"
+}
+
+data = {
+  "model": "flux-2-klein-4b",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "output_format": "jpg",
+  "output_quality": 80
+}
+
+response = requests.post(url, headers=headers, json=data)
+
+if response.status_code == 200:
+    with open("generated_image.png", "wb") as f:
+        f.write(response.content)
+        print("Image saved to generated_image.png")
+else:
+    print(f"Error: {response.status_code}")
+    print(response.text)
+```
+
+```js JavaScript theme={null}
+const body = {
+  "model": "flux-2-klein-4b",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "output_format": "jpg",
+  "output_quality": 80
+};
+
+const res = await fetch("https://platform.qubrid.com/v1/images/generations", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(body)
+});
+
+const result = await res.json();
+console.log(result);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/images/generations"
+
+	data := map[string]interface{}{
+		"model":          "flux-2-klein-4b",
+		"prompt":         "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+		"seed":           -1,
+		"aspect_ratio":   "1:1",
+		"output_format":  "jpg",
+		"output_quality": 80,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/images/generations" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "flux-2-klein-4b",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "seed": -1,
+  "aspect_ratio": "1:1",
+  "output_format": "jpg",
+  "output_quality": 80
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**FLUX.2 [klein] 4B** is a 4 billion parameter rectified flow transformer developed by Black Forest Labs, released January 15, 2026 under Apache 2.0.
+- It is part of the FLUX.2 [klein] model family — BFL's fastest image models to date. The architecture is a unified generative-editing backbone: the same weights handle text-to-image generation, single-reference editing, and multi-reference generation without switching pipelines.
+- Built on Rectified Flow, the model finds the straightest possible path between noise and image, enabling high-quality generation in as few as 4 inference steps (sub-second on enterprise GPUs). It fits in ~13GB VRAM and is accessible on RTX 3090/4070 and above.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                                                               |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| Model ID       | `flux-2-klein-4b`                                                                                                                     |
+| Provider       | Black Forest Labs                                                                                                                     |
+| Architecture   | Rectified Flow Transformer — unified generative-editing backbone; same weights for T2I, single-reference editing, and multi-reference generation |
+| Model Size     | 4B parameters (~23.7GB bf16 checkpoint; ~13GB VRAM at runtime)                                                                        |
+| Context Length | N/A                                                                                                                                   |
+| Release Date   | January 15, 2026                                                                                                                      |
+| License        | Apache 2.0                                                                                                                            |
+| Training Data  | Not publicly disclosed; NSFW/CSAM filtered pre-training data                                                                          |
+
+### When to use?
+
+You should consider using **FLUX.2 [klein] 4B** if:
+
+- You need real-time and sub-second text-to-image generation
+- Your application requires multi-reference image editing with style, character, or object transfer
+- You need single-reference image editing and style transfer
+- You are deploying locally on consumer GPUs (RTX 3090/4070+)
+- Your use case requires edge deployment and production pipelines with Apache 2.0 licensing
+- You need rapid prototyping and creative workflows
+
+### Inference Parameters
+
+| Parameter Name | Type   | Default | Description                                                                                              |
+|----------------|--------|---------|----------------------------------------------------------------------------------------------------------|
+| Seed           | number | -1      | Random seed for reproducible generation. Use -1 for random results.                                      |
+| Aspect Ratio   | string | 1:1     | Aspect ratio of the output image. Options: 1:1, 16:9, 21:9, 3:2, 2:3, 4:5, 5:4, 3:4, 4:3, 9:16, 9:21. |
+| Output Format  | string | jpg     | Format of the generated image. Options: png, jpg, webp.                                                  |
+| Output Quality | number | 80      | Compression quality for jpg/webp output (1–100). Not applicable for png outputs.                         |
+
+### Key Features
+
+- **Sub-Second Inference in 4 Steps:** Rectified flow architecture finds the straightest noise-to-image path, enabling high-quality generation in as few as 4 steps.
+- **Unified Generative-Editing Backbone:** Same weights handle T2I, single-reference editing, and multi-reference generation without pipeline switching.
+- **~13GB VRAM at Runtime:** Accessible on RTX 3090/4070 and above; fp8, nvfp4, and GGUF quantized variants available for tighter budgets.
+- **C2PA Pixel-Layer Watermarking:** Content provenance watermarking built into inference code for responsible deployment.
+- **Apache 2.0 License:** Fully open for commercial use with no restrictions.
+- **Diffusers-Native:** Available via `Flux2KleinPipeline` for seamless integration with the Hugging Face ecosystem.
+
+## Summary
+
+**FLUX.2 [klein] 4B** is Black Forest Labs' fastest open-source image model, built for sub-second generation and unified generative-editing from a single set of weights.
+- It uses a 4B Rectified Flow Transformer with a unified backbone for T2I, single-reference, and multi-reference generation, released January 2026.
+- It delivers high-quality generation in as few as 4 steps, fitting in ~13GB VRAM on consumer GPUs.
+- The model includes C2PA pixel-layer watermarking and supports fp8/nvfp4/GGUF quantization for flexible deployment.
+- Licensed under Apache 2.0 for full commercial use.

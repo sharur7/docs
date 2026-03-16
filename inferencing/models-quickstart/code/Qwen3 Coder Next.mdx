@@ -1,0 +1,216 @@
+---
+title: "Qwen3 Coder Next"
+description: "> An efficient MoE coding model designed for agentic development, repository-scale reasoning, and tool orchestration."
+---
+
+## About the Provider
+Qwen is an AI model family developed by Alibaba Group, a major Chinese technology and cloud computing company. Through its Qwen initiative, Alibaba builds and open-sources advanced language, images and coding models under permissive licenses to support innovation, developer tooling, and scalable AI integration across applications.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `Qwen/Qwen3-Coder-Next` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `Qwen/Qwen3-Coder-Next` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Coder-Next",
+    messages=[
+      {
+        "role": "user",
+        "content": "Write a Python function to calculate fibonacci sequence"
+      }
+    ],
+    max_tokens=8192,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'Qwen/Qwen3-Coder-Next',
+  messages: [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci sequence"
+    }
+  ],
+  max_tokens: 8192,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Coder-Next",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Write a Python function to calculate fibonacci sequence",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Coder-Next",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci sequence"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3-Coder-Next** is an open-weight MoE language model designed specifically for coding agents.
+- With only 3B activated parameters out of 79.7B total, it achieves performance comparable to models with 10–20x more active parameters.
+- It features a hybrid Gated Attention + Gated DeltaNet MoE architecture with 512 experts (10 active per token), 262K native context, and achieves 74.2% on SWE-Bench Verified — making it highly cost-effective for production agent deployment.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                             |
+|----------------|-----------------------------------------------------------------------------------------------------|
+| Model ID       | `Qwen/Qwen3-Coder-Next`                                                                             |
+| Provider       | Alibaba Cloud (Qwen Team)                                                                           |
+| Architecture   | Hybrid Gated Attention + Gated DeltaNet MoE Transformer, 512 experts / 10 active per token, 48 layers |
+| Model Size     | 79.7B params (3B active)                                                                            |
+| Parameters     | 4                                                                                                   |
+| Context Length | 262K Tokens                                                                                         |
+| Release Date   | February 1, 2026                                                                                    |
+| License        | Apache 2.0                                                                                          |
+| Training Data  | Code-centric and agent-centric corpora with long-horizon reasoning and execution failure recovery training |
+
+### When to use?
+
+You should consider using **Qwen3 Coder Next** if:
+
+- You need agentic software development and long-horizon coding
+- Your application requires complex tool use and function orchestration
+- You are building workflows with execution failure recovery
+- Your use case involves repository-scale navigation and bug fixing
+- You need automated testing, refactoring, and documentation
+- Your workflow involves CI/CD pipeline integration for code generation
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                              |
+|----------------|---------|---------|------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output. |
+| Temperature    | number  | 1       | Controls randomness in output.           |
+| Max Tokens     | number  | 8192    | Maximum tokens to generate.              |
+| Top P          | number  | 0.95    | Controls nucleus sampling.               |
+
+### Key Features
+
+- **74.2% SWE-Bench Verified:** 63.7% SWE-Bench Multilingual — state-of-the-art performance for an open-weight coding agent.
+- **10–20x Parameter Efficiency:** Only 3B active parameters from 79.7B total, performing like 30–60B dense models.
+- **Hybrid MoE Architecture:** Gated Attention + Gated DeltaNet with 512 experts and 10 active per token for efficient long-context reasoning.
+- **262K Native Context:** Supports repository-scale navigation, long-horizon task execution, and complex multi-file workflows.
+- **Advanced Tool Calling:** Complex function orchestration for production agent deployment and CI/CD integration.
+
+## Summary
+
+**Qwen3-Coder-Next** is Alibaba's open-weight coding agent model built for production agentic software development.
+- It uses a Hybrid Gated Attention + Gated DeltaNet MoE architecture with 79.7B total and 3B active parameters, with 512 experts and 10 active per token.
+- It achieves 74.2% on SWE-Bench Verified with 262K native context and advanced tool calling support.
+- The model delivers 10–20x parameter efficiency over comparable dense models for cost-effective agent deployment.
+- Licensed under Apache 2.0 for full commercial use.

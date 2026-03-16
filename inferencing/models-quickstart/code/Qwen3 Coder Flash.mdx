@@ -1,0 +1,212 @@
+---
+title: "Qwen3 Coder Flash"
+description: "> A lightweight coding model optimized for real-time code completion, quick snippets, and low-latency developer tooling."
+---
+
+## About the Provider
+Qwen is an AI model family developed by Alibaba Group, a major Chinese technology and cloud computing company. Through its Qwen initiative, Alibaba builds and open-sources advanced language, images and coding models under permissive licenses to support innovation, developer tooling, and scalable AI integration across applications.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `Qwen/Qwen3-Coder-Flash` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `Qwen/Qwen3-Coder-Flash` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Coder-Flash",
+    messages=[
+      {
+        "role": "user",
+        "content": "Write a Python function to calculate fibonacci sequence"
+      }
+    ],
+    max_tokens=8962,
+    temperature=0.1,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'Qwen/Qwen3-Coder-Flash',
+  messages: [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci sequence"
+    }
+  ],
+  max_tokens: 8962,
+  temperature: 0.1,
+  top_p: 1,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Coder-Flash",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Write a Python function to calculate fibonacci sequence",
+			},
+		},
+		"temperature": 0.1,
+		"max_tokens":  8962,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Coder-Flash",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci sequence"
+    }
+  ],
+  "temperature": 0.1,
+  "max_tokens": 8962,
+  "stream": true,
+  "top_p": 1
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3 Coder Flash** is a lightweight, fast coding model optimized for speed.
+- Built on a Transformer decoder-only architecture with up to 1M token context, it is designed for quick code snippets, function-level completions, and low-cost automation workflows.
+- It offers very fast inference at low cost, making it ideal for interactive development, editor-style auto-complete, and internal tooling scripts.
+
+### Model at a Glance
+
+| Feature        | Details                                              |
+|----------------|------------------------------------------------------|
+| Model ID       | `Qwen/Qwen3-Coder-Flash`                             |
+| Provider       | Alibaba Cloud (Qwen Team)                            |
+| Architecture   | Transformer decoder-only                             |
+| Model Size     | N/A                                                  |
+| Parameters     | 4                                                    |
+| Context Length | Up to 1M Tokens                                      |
+| Release Date   | 2025                                                 |
+| License        | Apache 2.0                                           |
+| Training Data  | Multilingual code from GitHub and coding platforms   |
+
+### When to use?
+
+You should consider using **Qwen3 Coder Flash** if:
+
+- You need quick code snippets and function-level completions during interactive development
+- Your application requires editor-style auto-complete for common patterns, boilerplate, and API usage
+- You are building small automation scripts, utilities, and glue code for internal tooling
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                                        |
+|----------------|---------|---------|--------------------------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.                   |
+| Temperature    | number  | 0.1     | Lower temperature for more deterministic code generation.          |
+| Max Tokens     | number  | 8962    | Maximum number of tokens the model can generate.                   |
+| Top P          | number  | 1       | Controls nucleus sampling for more predictable output.             |
+
+### Key Features
+
+- **Very Fast:** Optimized for low-latency inference, ideal for interactive development and real-time code completion.
+- **Low Cost:** Efficient architecture enabling cost-effective code generation at scale.
+- **Up to 1M Token Context:** Supports long codebases and extended coding sessions.
+- **Multilingual Code:** Trained on multilingual code from GitHub and coding platforms.
+
+## Summary
+
+**Qwen3 Coder Flash** is Alibaba's lightweight open-source coding model built for speed and low-cost code generation.
+- It uses a Transformer decoder-only architecture with up to 1M token context, trained on multilingual code from GitHub and coding platforms.
+- It is optimized for quick code snippets, function-level completions, boilerplate generation, and small automation scripts.
+- The model delivers very fast inference at low cost for interactive development workflows.
+- Licensed under Apache 2.0 for full commercial use.

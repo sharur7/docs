@@ -1,0 +1,217 @@
+---
+title: 'Qwen3 Next 80B A3B Thinking'
+description: '> A high-throughput reasoning model with hybrid attention, optimized for long-context analysis and complex multi-step tasks.'
+---
+
+## About the Provider
+Alibaba Cloud is the cloud computing arm of Alibaba Group and the creator of the Qwen model family. Through its open-source initiative, Alibaba has released state-of-the-art language and multimodal models under permissive licenses, enabling developers and enterprises to build powerful AI applications across diverse domains and languages.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `Qwen/Qwen3-Next-80B-A3B-Thinking` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `Qwen/Qwen3-Next-80B-A3B-Thinking` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Next-80B-A3B-Thinking",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=0.6,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 8192,
+  temperature: 0.6,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.6,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.6,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3-Next-80B-A3B-Thinking** is a next-generation foundation model from Alibaba's Qwen team featuring a revolutionary Hybrid Attention mechanism (Gated DeltaNet + Gated Attention) with High-Sparsity MoE architecture.
+- With 80B total parameters and only 3.9B active per token, it delivers 10x higher throughput than Qwen3-32B on long contexts while outperforming Gemini-2.5-Flash-Thinking on multiple benchmarks.
+- The model operates in thinking-only mode for deep chain-of-thought reasoning, with a native 256K context window suited for complex multi-step tasks and long-horizon agentic planning.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                                    |
+|----------------|------------------------------------------------------------------------------------------------------------|
+| Model ID       | `Qwen/Qwen3-Next-80B-A3B-Thinking`                                                                         |
+| Provider       | Alibaba Cloud (Qwen Team)                                                                                  |
+| Architecture   | Hybrid Attention (Gated DeltaNet + Gated Attention) with High-Sparsity MoE — 80B total / 3.9B active      |
+| Model Size     | 80B Total / 3.9B Active                                                                                    |
+| Parameters     | 4                                                                                                          |
+| Context Length | 256K Tokens                                                                                                |
+| Release Date   | 2025                                                                                                       |
+| License        | Apache 2.0                                                                                                 |
+| Training Data  | Large-scale multilingual dataset with RL post-training for deep chain-of-thought reasoning                 |
+
+### When to use?
+
+You should consider using **Qwen3-Next-80B-A3B-Thinking** if:
+
+- You need complex multi-step reasoning and mathematical proofs
+- Your application requires code synthesis and logical analysis
+- You are building agentic planning pipelines
+- Your use case involves long-context document analysis at high throughput
+- You need a thinking model that outperforms Gemini-2.5-Flash-Thinking
+- Your workflow requires a 256K context window with efficient sparse inference
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                                        |
+|----------------|---------|---------|--------------------------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.                   |
+| Temperature    | number  | 0.6     | Controls randomness. Lower values recommended for reasoning tasks. |
+| Max Tokens     | number  | 8192    | Maximum number of tokens to generate.                             |
+| Top P          | number  | 0.95    | Nucleus sampling parameter.                                        |
+
+### Key Features
+
+- **Hybrid Attention Architecture:** Combines Gated DeltaNet and Gated Attention layers for superior long-context efficiency over standard transformers.
+- **10x Throughput on Long Contexts:** Delivers 10x higher throughput than Qwen3-32B on sequences of 32K+ tokens.
+- **High-Sparsity MoE:** Only 3.9B parameters active per token from 80B total, enabling frontier reasoning at low inference cost.
+- **Native 256K Context Window:** Supports long-horizon document analysis, multi-turn agentic tasks, and extended reasoning chains.
+- **Outperforms Gemini-2.5-Flash-Thinking:** Achieves higher benchmark scores than Gemini-2.5-Flash-Thinking across reasoning evaluations.
+- **Apache 2.0 License:** Fully open-source with unrestricted commercial use.
+
+## Summary
+
+**Qwen3-Next-80B-A3B-Thinking** is Alibaba's next-generation reasoning model built for high-throughput, deep chain-of-thought inference.
+- It uses a novel Hybrid Attention (Gated DeltaNet + Gated Attention) with High-Sparsity MoE, with 80B total and 3.9B active parameters per token.
+- It delivers 10x throughput over Qwen3-32B on long contexts and outperforms Gemini-2.5-Flash-Thinking on reasoning benchmarks.
+- The model supports a native 256K context window, thinking-only mode, and is optimized for complex reasoning, code synthesis, and agentic tasks.
+- Licensed under Apache 2.0 for full commercial use.

@@ -1,0 +1,217 @@
+---
+title: 'Qwen3 Max'
+description: "> A flagship MoE language model optimized for complex reasoning, coding, and multilingual tasks."
+---
+
+## About the Provider
+Alibaba Cloud is the cloud computing arm of Alibaba Group and the creator of the Qwen model family. Through its open-source initiative, Alibaba has released state-of-the-art language and multimodal models under permissive licenses, enabling developers and enterprises to build powerful AI applications across diverse domains and languages.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `Qwen/Qwen3-Max` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `Qwen/Qwen3-Max` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Max",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=4096,
+    temperature=0.7,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'Qwen/Qwen3-Max',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 1,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Max",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Max",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3-Max** is Alibaba Cloud's most powerful closed-source model in the Qwen3 series, featuring a 235B Mixture-of-Experts architecture with 22B parameters active per forward pass.
+- It delivers frontier-level performance in complex reasoning, multilingual tasks, long-context understanding, and advanced coding — rivaling GPT-4o and Claude Sonnet on major benchmarks.
+- Accessible exclusively via the DashScope API, it supports 29+ languages and a hybrid thinking mode for complex reasoning tasks.
+
+### Model at a Glance
+
+| Feature        | Details                                                                              |
+|----------------|--------------------------------------------------------------------------------------|
+| Model ID       | `Qwen/Qwen3-Max`                                                                     |
+| Provider       | Alibaba Cloud (Qwen Team)                                                            |
+| Architecture   | Sparse Mixture-of-Experts (MoE) Transformer — 235B total / 22B active per token     |
+| Model Size     | 235B params (22B active)                                                             |
+| Parameters     | 4                                                                                    |
+| Context Length | 128K Tokens                                                                          |
+| Release Date   | April 2025                                                                           |
+| License        | Proprietary — Alibaba Cloud DashScope API only                                       |
+| Training Data  | Large-scale multilingual pretraining corpus with RLHF post-training (not publicly disclosed) |
+
+### When to use?
+
+You should consider using **Qwen3 Max** if:
+
+- You need complex multi-step reasoning tasks
+- Your application requires advanced coding and debugging
+- You are doing research and analytical writing
+- Your use case involves long-document summarization
+- You need multilingual chat and translation across 29+ languages
+- You are building enterprise chatbots and assistants
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                                                        |
+|----------------|---------|---------|------------------------------------------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.                                   |
+| Temperature    | number  | 0.7     | Controls creativity and randomness. Higher values produce more diverse output.     |
+| Max Tokens     | number  | 4096    | Maximum number of tokens the model can generate.                                   |
+| Top P          | number  | 1       | Controls nucleus sampling for more predictable output.                             |
+
+### Key Features
+
+- **235B MoE Architecture:** Frontier-level intelligence with only 22B parameters active per token.
+- **Rivals GPT-4o and Claude Sonnet:** Competitive performance on major reasoning, coding, and multilingual benchmarks.
+- **128K Context Window:** Supports long-document analysis, extended conversations, and complex multi-turn workflows.
+- **29+ Languages:** Strong multilingual performance with consistent instruction following across languages.
+- **Hybrid Thinking Mode:** Configurable reasoning depth for complex problem solving tasks.
+- **Excellent Structured Output:** Strong instruction following for JSON, function calling patterns, and schema-based responses.
+
+## Summary
+
+**Qwen3-Max** is Alibaba Cloud's flagship closed-source model, delivering GPT-4o and Claude Sonnet-level performance via the DashScope API.
+- It uses a 235B sparse MoE Transformer with 22B active parameters, released April 2025.
+- It supports 128K context, 29+ languages, and a hybrid thinking mode for complex reasoning.
+- The model excels at complex reasoning, advanced coding, long-document summarization, and multilingual enterprise workflows.
+- Licensed under Alibaba Cloud's proprietary DashScope API license.

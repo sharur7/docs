@@ -10,17 +10,30 @@ description: 'Browse all available serverless models on Qubrid AI platform.'
 | OpenAI | GPT OSS 120B | openai/gpt-oss-120b | 128000 | MXFP4 |
 | OpenAI | GPT OSS 20B | openai/gpt-oss-20b | 128000 | MXFP4 |
 | DeepSeek | DeepSeek R1 Distill Llama 70B | deepseek-ai/deepseek-r1-distill-llama-70b | 65000 | FP16 |
+| DeepSeek | DeepSeek R1 0528 | deepseek-ai/DeepSeek-R1-0528 | 131072 | FP16 |
+| DeepSeek | DeepSeek V3.2 | deepseek-ai/DeepSeek-V3.2 | 131072 | FP16 |
 | Mistral AI | Mistral (7B) Instruct v0.3 | mistralai/Mistral-7B-Instruct-v0.3 | 32768 | FP16 |
 | NVIDIA | Nemotron Orchestrator 8B | nvidia/Orchestrator-8B | 16384 | FP16 |
 | NVIDIA | Nemotron 3 Nano 30B | nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16 | 262144 | BF16 |
+| NVIDIA | Nemotron 3 Super 120B A12B | nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8 | 262144 | FP8 |
 | Microsoft | Fara 7B | microsoft/Fara-7B | 8192 | FP16 |
 | Meta | Llama 3.3 70B Instruct | meta-llama/Llama-3.3-70B-Instruct | 8192 | FP16 |
+| Qwen | Qwen3 Plus | Qwen/Qwen3-Plus | 131072 | FP16 |
+| Qwen | Qwen3 Next 80B A3B Thinking | Qwen/Qwen3-Next-80B-A3B-Thinking | 131072 | FP16 |
+| Qwen | Qwen3 Max | Qwen/Qwen3-Max | 131072 | FP16 |
+| Moonshot AI | Kimi K2 Thinking | moonshotai/Kimi-K2-Thinking | 131072 | FP16 |
+| ZhipuAI | GLM 4.7 FP8 | zai-org/GLM-4.7-FP8 | 131072 | FP8 |
+| MiniMax | MiniMax M2.1 | MiniMaxAI/MiniMax-M2.1 | 131072 | FP16 |
 
 ## Code Models
 
 | Organization | Model Name | API Model String | Context length | Quantization |
 | :----------- | :--------- | :--------------- | :------------- | :----------- |
 | Qwen | Qwen3 Coder 30B A3B Instruct | Qwen/Qwen3-Coder-30B-A3B-Instruct | 131000 | FP16 |
+| Qwen | Qwen3 Coder Plus | Qwen/Qwen3-Coder-Plus |  |  |
+| Qwen | Qwen3 Coder Next | Qwen/Qwen3-Coder-Next |  |  |
+| Qwen | Qwen3 Coder Flash | Qwen/Qwen3-Coder-Flash |  |  |
+| Qwen | Qwen3 Coder 480B A35B Instruct | Qwen/Qwen3-Coder-480B-A35B-Instruct |  |  |
 
 ## Image Models
 
@@ -33,6 +46,8 @@ description: 'Browse all available serverless models on Qubrid AI platform.'
 | Qwen Tongyi MAI | Z Image Turbo | Tongyi-MAI/Z-Image-Turbo | Image Generation | 9 |
 | Stability AI | Stable Diffusion 3.5 Large | stabilityai/stable-diffusion-3.5-large | Image Generation | 30 |
 | Qwen | Qwen Image Edit | Qwen/Qwen-Image-Edit | Image Edit | 20 |
+| Black Forest Labs | Flux Dev | black-forest-labs/flux-dev | Image Generation |  |
+| Black Forest Labs | Flux 2 Klein 4B | black-forest-labs/flux-2-klein-4b | Image Generation |  |
 
 
 ## Audio Models
@@ -59,11 +74,17 @@ description: 'Browse all available serverless models on Qubrid AI platform.'
 | :----------- | :--------- | :--------------- | :------------- |
 | Qwen | Qwen3-VL 8B Instruct | Qwen/Qwen3-VL-8B-Instruct | 32768 |
 | Qwen | Qwen3-VL 30B A3B Instruct | Qwen/Qwen3-VL-30B-A3B-Instruct | 128000 |
-| Qwen | Qwen3.5 397B A17B | Qwen/Qwen3.5-397B-A17B | 256000 |
-| Qwen | Qwen3.5 122B A10B | Qwen/Qwen3.5-122B-A10B | 256000 |
-| Qwen | Qwen3.5 27B | Qwen/Qwen3.5-27B | 256000 |
-| Qwen | Qwen3.5 35B A3B | Qwen/Qwen3.5-35B-A3B | 256000 |
-| Qwen | Qwen3.5 Flash | Qwen/Qwen3.5-Flash | 1000000 |
+| Qwen | Qwen2.5-VL 7B Instruct | Qwen/Qwen2.5-VL-7B-Instruct | 32768 |
+| Qwen | Qwen3-VL Plus | Qwen/Qwen3-VL-Plus |  |
+| Qwen | Qwen3-VL Flash | Qwen/Qwen3-VL-Flash |  |
+| Qwen | Qwen3-VL 235B A22B Instruct | Qwen/Qwen3-VL-235B-A22B-Instruct |  |
+| Qwen | Qwen3-VL 235B A22B Thinking | Qwen/Qwen3-VL-235B-A22B-Thinking | 262144 |
+| Qwen | Qwen3.5 397B A17B | Qwen/Qwen3.5-397B-A17B | 262144 |
+| Qwen | Qwen3.5 122B A10B | Qwen/Qwen3.5-122B-A10B | 262144 |
+| Qwen | Qwen3.5 27B | Qwen/Qwen3.5-27B | 262144 |
+| Qwen | Qwen3.5 35B A3B | Qwen/Qwen3.5-35B-A3B | 262144 |
+| Qwen | Qwen3.5 Flash | Qwen/Qwen3.5-Flash | 1048576 |
+| Moonshot AI | Kimi K2.5 | moonshotai/Kimi-K2.5 | 262144 |
 
 ## Embedding Models
 

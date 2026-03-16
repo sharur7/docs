@@ -1,0 +1,217 @@
+---
+title: 'Nemotron 3 Super 120B A12B'
+description: "> NVIDIA's agentic LLM — 2.2× throughput over GPT-OSS-120B, 1M token context, 60.47% SWE-Bench Verified."
+---
+
+## About the Provider
+NVIDIA is a global leader in AI computing and accelerated hardware, known for its GPUs and enterprise AI platforms. Through its NeMo and research initiatives, NVIDIA develops advanced models to enable reasoning, tool orchestration, and scalable AI workflows for developers and enterprises.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=16000,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 16000,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  16000,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 16000,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**NVIDIA Nemotron-3-Super-120B-A12B** is an open-weight LLM built for agentic reasoning and high-volume workloads.
+- Using a hybrid LatentMoE architecture (Mamba-2 + MoE + Attention) with Multi-Token Prediction (MTP) and native NVFP4 pretraining on 25T tokens, it delivers up to 2.2x higher throughput than GPT-OSS-120B and 7.5x higher than Qwen3.5-122B.
+- With a native 1M-token context window and configurable thinking mode, it is purpose-built for collaborative agents, long-context reasoning, and IT automation across 7 languages.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                                                              |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| Model ID       | `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8`                                                                                       |
+| Provider       | NVIDIA                                                                                                                               |
+| Architecture   | LatentMoE — Mamba-2 + MoE + Attention hybrid with Multi-Token Prediction (MTP); 512 experts, 22 active per token                    |
+| Model Size     | 120B params (12B active)                                                                                                             |
+| Parameters     | 4                                                                                                                                    |
+| Context Length | 256K Tokens (up to 1M)                                                                                                               |
+| Release Date   | March 11, 2026                                                                                                                       |
+| License        | NVIDIA Nemotron Open Model License                                                                                                   |
+| Training Data  | 25T token corpus (NVFP4 native pretraining): web, code, math, science, multilingual; post-training cutoff February 2026              |
+
+### When to use?
+
+You should consider using **Nemotron-3-Super-120B-A12B** if:
+
+- You need agentic workflows and multi-agent collaboration
+- Your application requires long-context reasoning up to 1M tokens
+- You are building IT ticket automation and high-volume enterprise workloads
+- Your use case involves complex tool use and multi-step function calling
+- You need RAG (Retrieval-Augmented Generation) pipelines
+- Your workflow involves software engineering and cybersecurity triaging
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                                               |
+|----------------|---------|---------|---------------------------------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output.                          |
+| Temperature    | number  | 1       | Controls randomness in output. Recommended: 1.0 for all tasks.            |
+| Max Tokens     | number  | 16000   | Maximum tokens to generate.                                               |
+| Top P          | number  | 0.95    | Controls nucleus sampling. Recommended: 0.95 for all tasks.               |
+
+### Key Features
+
+- **LatentMoE Architecture:** 512 experts with 22 active per token — same compute cost as standard MoE with higher capacity.
+- **2.2x Throughput vs GPT-OSS-120B:** Delivers 2.2x higher throughput than GPT-OSS-120B and 7.5x higher than Qwen3.5-122B.
+- **Native 1M Token Context:** 91.75% on RULER @ 1M vs GPT-OSS-120B's 22.30% — purpose-built for long-horizon reasoning.
+- **MTP Speculative Decoding:** 3.45 avg acceptance length enabling up to 3x wall-clock speedup.
+- **Configurable Thinking Mode:** Enable or disable reasoning via `enable_thinking=True/False` in the chat template.
+- **60.47% SWE-Bench Verified:** 83.73% MMLU-Pro and 79.23% GPQA across reasoning and software engineering benchmarks.
+
+## Summary
+
+**NVIDIA Nemotron-3-Super-120B-A12B** is NVIDIA's open-weight agentic reasoning model built for high-throughput enterprise workloads.
+- It uses a hybrid LatentMoE architecture (Mamba-2 + MoE + Attention) with 512 experts, 22 active per token, pretrained on 25T tokens.
+- It delivers 2.2x throughput over GPT-OSS-120B, 91.75% on RULER @ 1M context, and 60.47% on SWE-Bench Verified.
+- The model supports a native 1M token context window, configurable thinking mode, and MTP speculative decoding for up to 3x wall-clock speedup.
+- Licensed under the NVIDIA Nemotron Open Model License.

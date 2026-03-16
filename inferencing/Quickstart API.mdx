@@ -24,7 +24,7 @@ from pprint import pprint
 
 url = "https://platform.qubrid.com/api/v1/qubridai/chat/completions"
 headers = {
-    "Authorization": "Bearer QUBRID_API_KEY",
+    "Authorization": "Bearer <QUBRID_API_KEY>",
     "Content-Type": "application/json",
 }
 
@@ -90,7 +90,7 @@ else:
       method: "POST",
       headers: {
         Authorization:
-          "Bearer QUBRID_API_KEY",
+          "Bearer <QUBRID_API_KEY>",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
@@ -166,7 +166,7 @@ func main() {
 		panic(err)
 	}
 
-	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Authorization", "Bearer <QUBRID_API_KEY>")
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -209,7 +209,7 @@ func main() {
 
   ```curl cURL theme={null}
   curl -X POST "https://platform.qubrid.com/api/v1/qubridai/chat/completions" \
-    -H "Authorization: Bearer QUBRID_API_KEY" \
+    -H "Authorization: Bearer Qubrid_API_KEY" \
     -H "Content-Type: application/json" \
     --data '{
     "model": "openai/gpt-oss-120b",

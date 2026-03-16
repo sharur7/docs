@@ -1,0 +1,265 @@
+---
+title: "Kimi K2.5"
+description: "> A large-scale MoE model designed for multimodal reasoning, visual analysis, and coordinated agent-style workflows."
+---
+
+## About the Provider
+Moonshot AI is a Chinese AI research company focused on building large-scale foundation models with advanced agentic and multimodal capabilities. Kimi K2.5 is their most powerful open-source release, built through continual pretraining on 15 trillion mixed visual and text tokens, combining frontier reasoning, vision understanding, and multi-agent orchestration in a single model.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `moonshotai/Kimi-K2.5` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `moonshotai/Kimi-K2.5` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```py Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="moonshotai/Kimi-K2.5",
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "What is in this image? Describe the main elements."
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens=16384,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'moonshotai/Kimi-K2.5',
+  messages: [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What is in this image? Describe the main elements."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+          }
+        }
+      ]
+    }
+  ],
+  max_tokens: 16384,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "moonshotai/Kimi-K2.5",
+		"messages": []map[string]interface{}{
+			{
+				"role": "user",
+				"content": []map[string]interface{}{
+					{
+						"type": "text",
+						"text": "What is in this image? Describe the main elements.",
+					},
+					{
+						"type": "image_url",
+						"image_url": map[string]string{
+							"url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg",
+						},
+					},
+				},
+			},
+		},
+		"max_tokens":  16384,
+		"temperature": 1,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "moonshotai/Kimi-K2.5",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What is in this image? Describe the main elements."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 16384,
+  "temperature": 1,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Kimi K2.5** is Moonshot AI's most powerful open-source model to date — a native multimodal agentic model built through continual pretraining on 15 trillion mixed visual and text tokens atop Kimi-K2-Base.
+- With 1T total parameters and 32B active per token, it seamlessly integrates vision, language, and advanced agentic capabilities including an Agent Swarm paradigm that coordinates up to 100 parallel sub-agents, reducing execution time by 4.5x on parallelizable tasks.
+- It achieves 76.8% on SWE-bench Verified and 50.2% on HLE (Humanity's Last Exam) at 76% lower cost than Claude Opus 4.5, with a 256K context window and support for both Thinking and Instant modes.
+
+---
+
+## Model at a Glance
+
+| Feature        | Details                                                                                                      |
+|----------------|--------------------------------------------------------------------------------------------------------------|
+| Model ID       | `moonshotai/Kimi-K2.5`                                                                                       |
+| Provider       | Moonshot AI                                                                                                  |
+| Architecture   | Sparse MoE Transformer — 1T total / 32B active per token, continual pretraining on 15T vision + text tokens |
+| Model Size     | 1T Total / 32B Active                                                                                        |
+| Context Length | 256K Tokens                                                                                                  |
+| Release Date   | 2025                                                                                                         |
+| License        | Apache 2.0                                                                                                   |
+| Training Data  | 15 trillion mixed visual and text tokens; RL post-training for agentic and reasoning tasks                   |
+
+## When to use?
+
+You should consider using **Kimi K2.5** if:
+
+- You need native multimodal agent workflows combining vision and language
+- Your application requires visual code generation from UI screenshots or video
+- You are building complex parallel tasks using Agent Swarm coordination
+- Your use case involves advanced web development with vision understanding
+- You need multimodal research and analysis at frontier scale
+- Your workflow requires image or video-to-code translation
+
+---
+
+## Inference Parameters
+
+| Parameter Name | Type    | Default  | Description                                                                              |
+|----------------|---------|----------|------------------------------------------------------------------------------------------|
+| Streaming      | boolean | true     | Enable streaming responses for real-time output.                                         |
+| Temperature    | number  | 1        | Recommended 1.0 for Thinking mode, 0.6 for Instant mode.                                |
+| Max Tokens     | number  | 16384    | Maximum number of tokens to generate.                                                    |
+| Top P          | number  | 0.95     | Controls nucleus sampling.                                                               |
+| Mode           | select  | thinking | Thinking mode enables deep reasoning traces. Instant mode provides fast direct responses. |
+
+## Key Features
+
+- **76.8% SWE-bench Verified**: Frontier-level software engineering performance at open-source scale.
+- **50.2% HLE (Humanity's Last Exam)**: Achieves this at 76% lower cost than Claude Opus 4.5.
+- **Agent Swarm**: Coordinates up to 100 parallel sub-agents, reducing execution time by 4.5x on parallelizable tasks.
+- **Native Multimodal**: Jointly trained on 15T vision and text tokens — not a bolted-on vision encoder.
+- **Thinking and Instant Modes**: Configurable reasoning depth — deep chain-of-thought or fast direct responses.
+- **256K Context Window**: Long-horizon document analysis and multi-turn agentic workflows.
+- **Apache 2.0 License**: Fully open source with full commercial freedom.
+
+---
+
+## Summary
+
+**Kimi K2.5** is Moonshot AI's flagship open-source multimodal agentic model, built for complex reasoning and parallel agent execution.
+- It uses a Sparse MoE architecture with 1T total and 32B active parameters, pretrained on 15 trillion mixed vision and text tokens.
+- It leads on SWE-bench Verified (76.8%) and HLE (50.2%) while delivering 76% cost savings over Claude Opus 4.5.
+- The model supports Agent Swarm with up to 100 parallel sub-agents, Thinking and Instant modes, and a 256K context window.
+- Licensed under Apache 2.0 for full commercial use.

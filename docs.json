@@ -42,21 +42,35 @@
                 "pages": [
                   {
                     "group": "Chat Models",
-                    "pages": [
-                      "inferencing/models-quickstart/chat/GPT OSS 120B",
-                      "inferencing/models-quickstart/chat/GPT OSS 20B",
-                      "inferencing/models-quickstart/chat/DeepSeek R1 Distill Llama 70B",
-                      "inferencing/models-quickstart/chat/Mistral 7B",
-                      "inferencing/models-quickstart/chat/Nvidia Orchestrator 8B",
-                      "inferencing/models-quickstart/chat/Nemotron 3 Nano 30B",
-                      "inferencing/models-quickstart/chat/Fara 7B",
-                      "inferencing/models-quickstart/chat/Meta Llama 3.3 70B Instruct"
+                    "pages": 
+                     [
+                       "inferencing/models-quickstart/chat/DeepSeek R1 0528",
+                       "inferencing/models-quickstart/chat/DeepSeek V3.2",
+                       "inferencing/models-quickstart/chat/Meta Llama 3.3 70B Instruct",
+                       "inferencing/models-quickstart/chat/Qwen3 Max",
+                       "inferencing/models-quickstart/chat/Qwen3 Plus",
+                       "inferencing/models-quickstart/chat/Kimi K2 Thinking",
+                       "inferencing/models-quickstart/chat/DeepSeek R1 Distill Llama 70B",
+                       "inferencing/models-quickstart/chat/Mistral 7B Instruct v0.3",
+                       "inferencing/models-quickstart/chat/Qwen3 Next 80B A3B Thinking",
+                       "inferencing/models-quickstart/chat/GLM 4.7 FP8",
+                       "inferencing/models-quickstart/chat/GPT OSS 120B",
+                       "inferencing/models-quickstart/chat/GPT OSS 20B",
+                       "inferencing/models-quickstart/chat/Nemotron 3 Super 120B A12B",
+                       "inferencing/models-quickstart/chat/Nemotron 3 Nano 30B",
+                       "inferencing/models-quickstart/chat/Nvidia Orchestrator 8B",
+                       "inferencing/models-quickstart/chat/MiniMax M2.1",
+                       "inferencing/models-quickstart/chat/Fara 7B"
                     ]
                   },
                   {
                     "group": "Code Models",
                     "pages": [
-                      "inferencing/models-quickstart/code/Qwen3 Coder 30B A3B Instruct"
+                      "inferencing/models-quickstart/code/Qwen3 Coder 30B A3B Instruct",
+                      "inferencing/models-quickstart/code/Qwen3 Coder Plus",
+                      "inferencing/models-quickstart/code/Qwen3 Coder Next",
+                      "inferencing/models-quickstart/code/Qwen3 Coder Flash",
+                      "inferencing/models-quickstart/code/Qwen3 Coder 480B A35B Instruct"
                     ]
                   },
                   {
@@ -68,7 +82,9 @@
                       "inferencing/models-quickstart/image/P-Image Edit LoRA",
                       "inferencing/models-quickstart/image/Z Image Turbo",
                       "inferencing/models-quickstart/image/Qwen Image Edit",
-                      "inferencing/models-quickstart/image/Stable Diffusion 3.5 Large"
+                      "inferencing/models-quickstart/image/Stable Diffusion 3.5 Large",
+                      "inferencing/models-quickstart/image/Flux Dev",
+                      "inferencing/models-quickstart/image/Flux 2 Klein 4B"
                     ]
                   },
                   {
@@ -88,11 +104,16 @@
                     "pages": [
                       "inferencing/models-quickstart/vision/Qwen3 VL 8B Instruct",
                       "inferencing/models-quickstart/vision/Qwen3 VL 30B A3B Instruct",
+                      "inferencing/models-quickstart/vision/Qwen3 VL Plus",
+                      "inferencing/models-quickstart/vision/Qwen3 VL Flash",
+                      "inferencing/models-quickstart/vision/Qwen3 VL 235B A22B Instruct",
+                      "inferencing/models-quickstart/vision/Qwen3 VL 235B A22B Thinking",
                       "inferencing/models-quickstart/vision/Qwen3.5 397B A17B",
                       "inferencing/models-quickstart/vision/Qwen3.5 122B A10B",
                       "inferencing/models-quickstart/vision/Qwen3.5 27B",
                       "inferencing/models-quickstart/vision/Qwen3.5 35B A3B",
-                      "inferencing/models-quickstart/vision/Qwen3.5 Flash"
+                      "inferencing/models-quickstart/vision/Qwen3.5 Flash",
+                      "inferencing/models-quickstart/vision/Kimi K2.5"
                     ]
                   },
                   {

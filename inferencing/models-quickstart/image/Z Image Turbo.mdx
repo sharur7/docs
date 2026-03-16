@@ -8,7 +8,7 @@ Alibaba, through its Tongyi-MAI research division, is the technology provider be
 
 ## Model Quickstart
 
-This section helps you quickly get started with the `Tongyi-MAI/Z-Image-Turbo` model on the Qubrid AI inferencing platform.
+This section helps you quickly get started with the `z-image-turbo` model on the Qubrid AI inferencing platform.
 
 To use this model, you need:
 
@@ -16,13 +16,13 @@ To use this model, you need:
 - Access to the Qubrid inference API
 - Basic knowledge of making API requests in your preferred language
 
-Once authenticated with your API key, you can send inference requests to the `Tongyi-MAI/Z-Image-Turbo` model and receive responses based on your input prompts.
+Once authenticated with your API key, you can send inference requests to the `z-image-turbo` model and receive responses based on your input prompts.
 
 Below are example placeholders showing how the model can be accessed using different programming environments.  
 You can choose the one that best fits your workflow.
 
 <CodeGroup>
-  ```py Python theme={null}
+```py Python theme={null}
 import requests
 import json
 
@@ -32,10 +32,9 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# Prepare generation parameters
 data = {
-  "model": "Tongyi-MAI/Z-Image-Turbo",
-  "positive_prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "model": "z-image-turbo",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
   "width": 1024,
   "height": 1024,
   "steps": 9,
@@ -45,10 +44,8 @@ data = {
   "response_format": "url"
 }
 
-# Send request
 response = requests.post(url, headers=headers, json=data)
 
-# Save the generated image
 if response.status_code == 200:
     with open("generated_image.png", "wb") as f:
         f.write(response.content)
@@ -60,8 +57,8 @@ else:
 
 ```js JavaScript theme={null}
 const body = {
-  "model": "Tongyi-MAI/Z-Image-Turbo",
-  "positive_prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "model": "z-image-turbo",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
   "width": 1024,
   "height": 1024,
   "steps": 9,
@@ -98,8 +95,8 @@ func main() {
 	url := "https://platform.qubrid.com/v1/images/generations"
 
 	data := map[string]interface{}{
-		"model":           "Tongyi-MAI/Z-Image-Turbo",
-		"positive_prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+		"model":           "z-image-turbo",
+		"prompt":          "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
 		"width":           1024,
 		"height":          1024,
 		"steps":           9,
@@ -133,8 +130,8 @@ curl -X POST "https://platform.qubrid.com/v1/images/generations" \
   -H "Authorization: Bearer QUBRID_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-  "model": "Tongyi-MAI/Z-Image-Turbo",
-  "positive_prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
+  "model": "z-image-turbo",
+  "prompt": "cinematic shot of a lone astronaut standing on a desolate alien planet, glowing orange sunset sky, dust storms swirling, dramatic lighting, ultra-wide lens composition, movie still aesthetic, realistic space suit details, volumetric atmosphere, 8k sci-fi film scene",
   "width": 1024,
   "height": 1024,
   "steps": 9,
@@ -175,7 +172,7 @@ curl -X POST "https://platform.qubrid.com/v1/images/generations" \
 
 | Feature                    | Details                           |
 | -------------------------- | --------------------------------- |
-| Model ID                   | Tongyi-MAI/Z-Image-Turbo              |
+| Model ID                   | `z-image-turbo`                   |
 | Architecture               | Latent Diffusion Turbo model based on Z-Image framework designed for high-speed image generation                   |
 | Model Type                 | Image Generation                  |
 | Model Size                 | 6B params                         |
@@ -217,5 +214,5 @@ Z Image Turbo is suitable for production inference scenarios where efficiency, c
 **Z Image Turbo** is a fast, efficient image generation model built for production use. It is distilled from a larger foundation model to reduce inference cost while maintaining visual quality. The model excels at photorealistic images, stylized artwork, and text rendering. It supports flexible resolutions and deterministic outputs via seed control. Z Image Turbo is ideal for real-time and large-scale image generation workloads.
 
 
-For a comprehensive overview of `Z-Image-Turbo`  
+For a comprehensive overview of `Z-Image-Turbo.`  
 visit [Qubrid's Official Medium Guide](https://medium.com/@qubrid/the-ultimate-guide-to-z-image-turbo-supercharge-your-image-generation-with-the-fastest-qubrids-ai-5517ebbf5e16).

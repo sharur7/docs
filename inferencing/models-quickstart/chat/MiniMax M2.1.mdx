@@ -1,0 +1,218 @@
+---
+title: 'MiniMax M2.1'
+description: '> A high-capacity coding model built for agentic workflows, polyglot development, and long-context tasks.'
+---
+
+## About the Provider
+MiniMax is a Chinese AI research company focused on building large-scale open-source foundation models for coding, reasoning, and agentic workflows. Through its open-weights initiative, MiniMax develops efficient sparse models that deliver frontier-level performance accessible to developers and enterprises worldwide.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `MiniMaxAI/MiniMax-M2.1` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `MiniMaxAI/MiniMax-M2.1` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="MiniMaxAI/MiniMax-M2.1",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+```js JavaScript theme={null}
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'MiniMaxAI/MiniMax-M2.1',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 8192,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "MiniMaxAI/MiniMax-M2.1",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "MiniMaxAI/MiniMax-M2.1",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**MiniMax-M2.1** is a SOTA open-source coding and agentic model with 230B total parameters and only 10B active per token, achieving a 23:1 sparsity ratio.
+- Released December 2025, it achieves 74% on SWE-bench Verified — competitive with Claude Sonnet 4.5 — at a fraction of the cost, with best-in-class polyglot coding across Python, Java, Go, Rust, C++, TypeScript, and Kotlin.
+- With a 200K context window, FP8 native quantization, and open weights for local deployment, it is purpose-built for long-horizon agentic workflows and enterprise office automation.
+
+### Model at a Glance
+
+| Feature        | Details                                                                                      |
+|----------------|----------------------------------------------------------------------------------------------|
+| Model ID       | `MiniMaxAI/MiniMax-M2.1`                                                                     |
+| Provider       | MiniMax                                                                                      |
+| Architecture   | Sparse MoE Transformer — 230B total / 10B active per token (23:1 sparsity), FP8 quantization |
+| Model Size     | 230B Total / 10B Active                                                                      |
+| Parameters     | 5                                                                                            |
+| Context Length | 200K Tokens                                                                                  |
+| Release Date   | December 2025                                                                                |
+| License        | Apache 2.0                                                                                   |
+| Training Data  | Large-scale multilingual code and instruction dataset across major programming languages      |
+
+### When to use?
+
+You should consider using **MiniMax-M2.1** if:
+
+- You need multilingual software development across Python, Java, Go, Rust, C++, TypeScript, and Kotlin
+- Your application requires long-horizon agentic coding workflows
+- You are building full-stack app generation pipelines
+- Your use case involves code review and optimization
+- You need office automation with complex multi-step tool use
+- You want Claude Sonnet 4.5-level coding performance at open-source cost
+
+### Inference Parameters
+
+| Parameter Name | Type    | Default | Description                                      |
+|----------------|---------|---------|--------------------------------------------------|
+| Streaming      | boolean | true    | Enable streaming responses for real-time output. |
+| Temperature    | number  | 1       | Recommended at 1.0 for best performance.         |
+| Max Tokens     | number  | 8192    | Maximum number of tokens the model can generate. |
+| Top P          | number  | 0.95    | Controls nucleus sampling.                       |
+| Top K          | number  | 40      | Limits token sampling to top-k tokens.           |
+
+### Key Features
+
+- **74% SWE-bench Verified:** Competitive with Claude Sonnet 4.5 on real-world software engineering tasks at open-source cost.
+- **23:1 Sparsity Ratio:** Only 10B parameters active per token from 230B total — extreme efficiency for frontier-level coding performance.
+- **Best-in-Class Polyglot Coding:** Excels across Python, Java, Go, Rust, C++, TypeScript, and Kotlin for diverse software development workflows.
+- **200K Context Window:** Supports long-horizon agentic tasks, full-codebase analysis, and extended multi-turn tool use.
+- **FP8 Native Quantization:** Reduced memory footprint with no accuracy trade-off for production deployments.
+- **Open Weights:** Fully available for local and on-premise deployment.
+
+## Summary
+
+**MiniMax-M2.1** is MiniMax's flagship open-source coding and agentic model, delivering Claude Sonnet 4.5-level performance at open-source scale.
+- It uses a 230B sparse MoE Transformer with 10B active parameters per token and FP8 native quantization, released December 2025.
+- It achieves 74% on SWE-bench Verified with best-in-class polyglot coding across 7 major programming languages.
+- The model supports a 200K context window, long-horizon agentic workflows, and open weights for local deployment.
+- Licensed under Apache 2.0 for full commercial use.
