@@ -1,0 +1,159 @@
+---
+title: "Qwen3 TTS Flash"
+description: "> A fast, multilingual text-to-speech model with multiple expressive voices — built for real-time synthesis and interactive experiences."
+---
+
+## About the Provider
+Alibaba Cloud is the cloud computing arm of Alibaba Group and the creator of the Qwen model family. Through its open-source initiative, Alibaba has released state-of-the-art language and multimodal models under permissive licenses, enabling developers and enterprises to build powerful AI applications across diverse domains and languages.
+
+## Model Quickstart
+
+This section helps you quickly get started with the `qwen3-tts-flash` model on the Qubrid AI inferencing platform.
+
+To use this model, you need:
+
+- A valid **Qubrid API key**
+- Access to the Qubrid inference API
+- Basic knowledge of making API requests in your preferred language
+
+Once authenticated with your API key, you can send inference requests to the `qwen3-tts-flash` model and receive responses based on your input prompts.
+
+Below are example placeholders showing how the model can be accessed using different programming environments.  
+You can choose the one that best fits your workflow.
+
+<CodeGroup>
+```python Python theme={null}
+import requests
+import json
+
+url = "https://platform.qubrid.com/v1/audio/generations"
+headers = {
+    "Authorization": "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json",
+}
+
+data = {
+    "model": "qwen3-tts-flash",
+    "text": "Today is a wonderful day to build something people love!",
+    "voice": "Cherry",
+    "language_type": "Auto",
+}
+
+response = requests.post(url, headers=headers, json=data)
+print(response.json())
+```
+
+```js JavaScript theme={null}
+const response = await fetch("https://platform.qubrid.com/v1/audio/generations", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer QUBRID_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "qwen3-tts-flash",
+    text: `Today is a wonderful day to build something people love!`,
+    voice: "Cherry",
+    language_type: "Auto",
+  }),
+});
+
+const result = await response.json();
+console.log(result.data?.[0]?.audio_url || result);
+```
+
+```go Go theme={null}
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/audio/generations"
+
+	payload := map[string]interface{}{
+		"model":         "qwen3-tts-flash",
+		"text":          "Today is a wonderful day to build something people love!",
+		"voice":         "Cherry",
+		"language_type": "Auto",
+	}
+
+	body, _ := json.Marshal(payload)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	fmt.Println("Status:", res.Status)
+}
+```
+
+```curl cURL theme={null}
+curl -X POST "https://platform.qubrid.com/v1/audio/generations" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"qwen3-tts-flash","text":"Today is a wonderful day to build something people love!","voice":"Cherry","language_type":"Auto"}'
+```
+</CodeGroup>
+
+## Model Overview
+
+**Qwen3-TTS-Flash** is a fast, high-quality text-to-speech model supporting multiple voices, languages, and expressive speaking styles.
+- It is ideal for real-time applications and interactive experiences, built on a neural TTS architecture with transformer-based acoustic modeling and vocoder.
+- With multilingual support, configurable voice and language options, and low-latency synthesis, it is suitable for a wide range of production audio generation workflows.
+
+### Model at a Glance
+
+| Feature        | Details                                                                       |
+|----------------|-------------------------------------------------------------------------------|
+| Model ID       | `qwen3-tts-flash`                                                             |
+| Provider       | Alibaba Cloud (Qwen Team)                                                     |
+| Architecture   | Neural TTS with transformer-based acoustic modeling and vocoder               |
+| Model Size     | Multi-billion parameters (approx.)                                            |
+| Context Length | Up to ~10K characters                                                         |
+| Release Date   | 2025                                                                          |
+| License        | Apache 2.0                                                                    |
+| Training Data  | N/A                                                                           |
+
+### When to use?
+
+You should consider using **Qwen3 TTS Flash** if:
+
+- You need product tutorials and onboarding voiceovers generated from documentation or scripts
+- Your application requires voice-enabling chatbots and virtual assistants for a more engaging UX
+- You are generating narration for marketing videos, explainers, and social content
+- Your use case involves accessibility features such as screen-reading and audio summaries of long text
+- You need educational content, audiobooks, and podcast-like experiences generated from text
+
+### Inference Parameters
+
+| Parameter Name | Type   | Default | Description                                      |
+|----------------|--------|---------|--------------------------------------------------|
+| Voice          | select | Cherry  | Select the speaker voice for synthesis.          |
+| Language       | select | Auto    | Language hint for the TTS request.               |
+
+### Key Features
+
+- **Multiple High-Quality Voices:** A selection of expressive, natural-sounding speaker voices for diverse use cases.
+- **Multilingual Support:** Handles multiple languages with automatic language detection.
+- **Low Latency Synthesis:** Optimized for real-time audio generation and interactive applications.
+- **Configurable Voice and Language:** Flexible voice and language selection per request.
+- **Apache 2.0 License:** Fully open-source with unrestricted commercial use.
+
+## Summary
+
+**Qwen3-TTS-Flash** is Alibaba's fast text-to-speech model built for real-time multilingual audio synthesis.
+- It uses a neural TTS architecture with transformer-based acoustic modeling and vocoder, supporting multiple expressive voices.
+- It is optimized for low-latency synthesis across product voiceovers, chatbot audio, accessibility features, and educational content.
+- The model supports configurable voice and language settings with up to ~10K character context.
+- Licensed under Apache 2.0 for full commercial use.

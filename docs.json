@@ -90,7 +90,8 @@
                   {
                     "group": "Audio Models",
                     "pages": [
-                      "inferencing/models-quickstart/audio/Whisper Large v3"
+                      "inferencing/models-quickstart/audio/Whisper Large v3",
+                      "inferencing/models-quickstart/audio/Qwen3 TTS Flash"
                     ]
                   },
                   {
