@@ -106,6 +106,162 @@ curl -X POST "https://platform.qubrid.com/v1/audio/generations" \
 ```
 </CodeGroup>
 
+<Warning>
+Always match your `text` language with the `language_type` you set. Sending English text with `language_type: Chinese` will produce broken or unnatural audio. The model speaks best when the script and language are aligned.
+</Warning>
+
+
+## Available Voices
+
+> **"Welcome to Qubrid. This demo shows how easy it is to turn text into natural speech."**
+
+Explore the voices — find the one that brings your product to life.
+
+<Tabs>
+  <Tab title="Cherry">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/cherry.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Elias">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/elias.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Arthur">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/arthur.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Nini">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/nini.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Ebona">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/ebona.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Seren">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/seren.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Pip">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/pip.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+  <Tab title="Stella">
+    <div style={{display: "flex", justifyContent: "center", paddingTop: "8px"}}>
+      <video controls src="/audio/stella.mp3" style={{width: "60%", height: "40px"}} />
+    </div>
+  </Tab>
+</Tabs>
+
+<Tip>
+**Voice selection matters.** A few confirmed highlights:
+- **Arthur** — Bold, deep, authoritative male voice. Best for trailers, audiobooks, documentary narration, and cinematic scripts.
+- **Nini** — Expressive, anime-style voice. Best for game NPCs, visual novel characters, and animated dubs.
+- **Stella** — Anime-style voice with a softer tone. Best for companion characters and emotional scenes.
+
+Experiment with all available voices on the [Qubrid Playground](https://platform.qubrid.com/playground)
+</Tip>
+
+## Voice Scripts & Use Cases
+
+Qwen3-TTS-Flash isn't just a text reader — it's a production-grade voice engine. Below are real scripts across languages and use cases that show exactly what this model can do. Copy any of these directly into your API call.
+
+---
+
+### 🇺🇸 English — Customer Support Agent
+
+> **Use case:** Automated voice response for a SaaS support chatbot
+
+```
+"Thank you for reaching out to Qubrid Support. I'm looking into your account right now.
+It looks like your API usage spiked earlier today — don't worry, your limits have been reset
+and your service is fully active. Is there anything else I can help you with today?"
+```
+
+```json
+{
+  "model": "qwen3-tts-flash",
+  "text": "Thank you for reaching out to Qubrid Support. I'm looking into your account right now. It looks like your API usage spiked earlier today — don't worry, your limits have been reset and your service is fully active. Is there anything else I can help you with today?",
+  "voice": "Cherry",
+  "language_type": "English"
+}
+```
+
+---
+
+### 🇨🇳 Chinese — E-Commerce Onboarding Voiceover
+
+> **Use case:** Product walkthrough narration for a Chinese marketplace app
+
+```
+"欢迎来到 Qubrid AI 平台！在这里，您可以轻松访问全球顶尖的 AI 模型，
+无需任何基础设施搭建。只需一个 API 密钥，即可立刻开始体验。
+让我们一起开启智能应用的新时代！"
+```
+
+```json
+{
+  "model": "qwen3-tts-flash",
+  "text": "欢迎来到 Qubrid AI 平台！在这里，您可以轻松访问全球顶尖的 AI 模型，无需任何基础设施搭建。只需一个 API 密钥，即可立刻开始体验。让我们一起开启智能应用的新时代！",
+  "voice": "Cherry",
+  "language_type": "Chinese"
+}
+```
+
+---
+
+### 🇧🇷 Portuguese — Interactive Chatbot Response
+
+> **Use case:** Voice-enabled virtual assistant for a Brazilian fintech app
+
+```
+"Olá! Seja bem-vindo ao seu assistente financeiro pessoal.
+Seu saldo atual é de R$ 4.250,00 e você tem duas faturas vencendo esta semana.
+Gostaria que eu agendasse os pagamentos automaticamente para você?"
+```
+
+```json
+{
+  "model": "qwen3-tts-flash",
+  "text": "Olá! Seja bem-vindo ao seu assistente financeiro pessoal. Seu saldo atual é de R$ 4.250,00 e você tem duas faturas vencendo esta semana. Gostaria que eu agendasse os pagamentos automaticamente para você?",
+  "voice": "Cherry",
+  "language_type": "Portuguese"
+}
+```
+
+---
+
+### 🎌 Anime & Gaming — Character Voice Script
+
+> **Use case:** Dynamic NPC dialogue generation for a Japanese-style game or anime dub
+
+```
+"W-wait, you actually came back for me? I thought... I thought you forgot.
+Nobody ever comes back. But you did. Maybe... maybe I can trust you after all.
+Just don't make me regret this, okay?"
+```
+
+```json
+{
+  "model": "qwen3-tts-flash",
+  "text": "W-wait, you actually came back for me? I thought... I thought you forgot. Nobody ever comes back. But you did. Maybe... maybe I can trust you after all. Just don't make me regret this, okay?",
+  "voice": "Nini",
+  "language_type": "English"
+}
+```
+
+> 💡 **Pro tip:** **Nini** and **Stella** carry that expressive, emotional anime-style tone — perfect for game characters, visual novel dialogue, and animated dubs. Try **Stella** for a softer, gentler character and **Nini** for something more spirited and reactive.
+
+---
+
+
 ## Model Overview
 
 **Qwen3-TTS-Flash** is a fast, high-quality text-to-speech model supporting multiple voices, languages, and expressive speaking styles.
@@ -134,6 +290,22 @@ You should consider using **Qwen3 TTS Flash** if:
 - You are generating narration for marketing videos, explainers, and social content
 - Your use case involves accessibility features such as screen-reading and audio summaries of long text
 - You need educational content, audiobooks, and podcast-like experiences generated from text
+
+### Supported Languages
+
+| Language | `language_type` |
+|---|---|
+| Auto-detect | `Auto` |
+| Chinese | `Chinese` |
+| English | `English` |
+| German | `German` |
+| Italian | `Italian` |
+| Portuguese | `Portuguese` |
+| Spanish | `Spanish` |
+| Japanese | `Japanese` |
+| Korean | `Korean` |
+| French | `French` |
+| Russian | `Russian` |
 
 ### Inference Parameters
 
