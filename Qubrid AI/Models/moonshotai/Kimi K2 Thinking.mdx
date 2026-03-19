@@ -1,0 +1,386 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Moonshot AI · Chat / LLM · 1T Parameters (32B Active) · 256K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/moonshotai-Kimi-K2-Thinking)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking)
+[![License](https://img.shields.io/badge/License-Modified_MIT-blue?style=flat-square)](https://huggingface.co/moonshotai/Kimi-K2-Thinking/blob/main/LICENSE)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-moonshotai%2FKimi--K2--Thinking-orange?style=flat-square)](https://huggingface.co/moonshotai/Kimi-K2-Thinking)
+
+`Streaming` `Reasoning` `Chain-of-Thought` `Agentic Coding` `Tool Orchestration` `Long Context`
+
+---
+</div>
+
+## Overview
+
+**Kimi K2 Thinking** is the flagship open-weights reasoning model from **Moonshot AI** — a Chinese AI research company focused on building large-scale foundation models with advanced agentic capabilities. It is the **first open-source model to outperform leading closed-source models** including GPT-5 and Claude 4.5 Sonnet across major benchmarks — **HLE (44.9%)**, **BrowseComp (60.2%)**, and **SWE-Bench Verified (71.3%)**. Built on a **1T parameter sparse MoE architecture** with 32B active per token and native INT4 quantization via QAT, it runs at **2x the speed of FP8 deployments**. The model maintains stable tool-use across **200–300 sequential calls** within a 256K context window, with interleaved chain-of-thought and dynamic tool calling for complex agentic workflows. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🏆 **First open-source to beat GPT-5 and Claude 4.5 Sonnet. 1T MoE. 2x FP8 speed.**
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no 512GB RAM cluster required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Model ID**         | `moonshotai/Kimi-K2-Thinking`                                                                                                            |
+| **Provider**         | Moonshot AI                                                                                                                              |
+| **Kind**             | Chat / LLM                                                                                                                               |
+| **Architecture**     | Sparse MoE Transformer — 1T total / 32B active per token, 61 layers (1 dense), 384 experts (8 selected per token), MLA attention, SwiGLU |
+| **Parameters**       | 1T total (32B active per forward pass)                                                                                                   |
+| **Context Length**   | 256,000 Tokens                                                                                                                           |
+| **MoE**              | No                                                                                                                                       |
+| **Release Date**     | November 2025                                                                                                                            |
+| **License**          | Modified MIT License                                                                                                                     |
+| **Training Data**    | Large-scale diverse dataset with agentic reasoning trajectories; INT4 Quantization-Aware Training (QAT) in post-training                 |
+| **Function Calling** | Not Supported                                                                                                                            |
+| **Image Support**    | N/A                                                                                                                                      |
+| **Serverless API**   | Available                                                                                                                                |
+| **Fine-tuning**      | Coming Soon                                                                                                                              |
+| **On-demand**        | Coming Soon                                                                                                                              |
+| **State**            | 🟢 Ready                                                                                                                                 |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type                | Price per 1M Tokens |
+| ------------------------- | ------------------- |
+| **Input Tokens**          | $0.60               |
+| **Input Tokens (Cached)** | $0.30               |
+| **Output Tokens**         | $2.50               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> ⚠️ **Temperature note:** Always use `temperature=1.0` for Kimi K2 Thinking — this is the recommended setting for all tasks and benchmark-consistent performance.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="moonshotai/Kimi-K2-Thinking",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=16384,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "moonshotai/Kimi-K2-Thinking",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 16384,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "moonshotai/Kimi-K2-Thinking",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  16384,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "moonshotai/Kimi-K2-Thinking",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 16384,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `What are the benefits of renewable energy?`
+
+**Response:**
+
+```
+<think>
+The user wants a comprehensive but accessible breakdown of renewable energy
+benefits. I'll cover environmental, economic, energy security, and
+technological dimensions with supporting specifics.
+</think>
+
+Renewable energy delivers benefits across four major dimensions:
+
+Environmental
+  • Zero direct emissions during operation — solar, wind, and hydro generate
+    no CO₂, SOₓ, or NOₓ at the point of generation
+  • Reduces dependence on fossil fuel extraction, lowering habitat disruption,
+    groundwater contamination risk, and land degradation
+  • Directly supports national and international decarbonization targets
+    (Paris Agreement, net-zero commitments by 2050)
+
+Economic
+  • The levelized cost of energy (LCOE) for solar PV and onshore wind is now
+    lower than new coal or gas plants in most markets globally
+  • Stable long-term energy pricing — no fuel cost volatility linked to
+    geopolitical events or commodity markets
+  • Creates durable local employment across manufacturing, installation,
+    grid integration, and maintenance
+  • Renewable infrastructure attracts long-term capital — clean energy is
+    the fastest-growing segment of global infrastructure investment
+
+Energy Security
+  • Reduces import dependency on oil, gas, and coal from geopolitically
+    sensitive regions
+  • Distributed generation (rooftop solar, microgrids) improves grid
+    resilience against centralized outages and cyberattacks
+  • Nations with strong renewable resources can achieve near-complete
+    domestic energy independence
+
+Technological & Social Spillovers
+  • Battery storage, smart grid, and power electronics innovation driven
+    by renewables deployment benefits the broader economy
+  • Accelerates electrification of transportation, heating, and industrial
+    processes — enabling deeper decarbonization across all sectors
+  • Improves energy access in remote and underserved communities where
+    grid extension is economically unviable
+
+Key tradeoffs to consider:
+  • Intermittency of solar and wind requires storage or grid balancing
+  • Large-scale installations have land use and materials requirements
+  • Upfront capital costs remain higher for some technologies
+
+Net assessment: for most economies, renewable energy now represents
+the most cost-effective, strategically sound long-term energy pathway.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking) lets you interact with Kimi K2 Thinking directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's reasoning depth, role, and tool-use constraints before the conversation begins — essential for long-horizon agentic research workflows and multi-step coding sessions.
+
+```
+Example: "You are an autonomous research agent. For every task:
+1. Think through the full approach before taking any action.
+2. Break complex tasks into sequential subtasks.
+3. After each tool call, evaluate the result before proceeding.
+4. Summarize your findings in a structured report at the end."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking) and it applies across every turn — including stable reasoning state across extended multi-step sessions.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's reasoning style and output format with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                           | Assistant Response                                                                                                                                                                                       |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Find all bugs in this Python function and fix them` | `Bug 1 (line 4): Off-by-one error — range(len(arr)) should be range(len(arr)-1). Bug 2 (line 7): Division by zero not handled — add: if denominator == 0: return None. Fixed function: [corrected code]` |
+| `Prove that log₂(3) is irrational`                   | `Assume log₂(3) = p/q (rational, lowest terms). Then 2^(p/q) = 3 → 2^p = 3^q. Left side is even, right side is odd. Contradiction. Therefore log₂(3) is irrational. ∎`                                   |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking) to establish reasoning format and output structure — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                           |
+| --------------- | ------- | ------- | ----------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output       |
+| **Temperature** | number  | `1`     | Recommended temperature is `1.0` for Kimi K2 Thinking |
+| **Max Tokens**  | number  | `16384` | Maximum number of tokens to generate                  |
+| **Top P**       | number  | `0.95`  | Controls nucleus sampling                             |
+
+---
+
+## Use Cases
+
+1. Complex agentic research workflows
+2. Long-horizon coding and debugging
+3. Advanced mathematical reasoning
+4. Multi-step tool orchestration
+5. Autonomous writing and analysis
+6. Scientific reasoning tasks
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                                      | Limitations                                                      |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| First open-source model to beat GPT-5 and Claude 4.5 Sonnet on open benchmarks | Requires 512GB+ RAM for full self-hosted deployment              |
+| 1T MoE with only 32B active per token — frontier reasoning at efficiency       | ~600GB model size — large infrastructure needed for self-hosting |
+| Native INT4 via QAT — 2x speed vs FP8 with no accuracy loss                    | Thinking mode means higher latency than non-reasoning models     |
+| Interleaved chain-of-thought with dynamic tool calling                         | Temperature must be set to `1.0` for recommended performance     |
+| Stable across 200–300 sequential tool calls                                    | Function calling not supported via API                           |
+| 256K context window for long-horizon agentic sessions                          |                                                                  |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 1T MoE served serverlessly, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 💰 **Cached input pricing** — $0.30/1M for cached tokens, critical for long agentic sessions with repeated context
+- 🧠 **Frontier reasoning on demand** — access the first open-source model to beat GPT-5 without managing a 600GB deployment
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                            |
+| 🎮 Playground   | [Try Kimi K2 Thinking live](https://platform.qubrid.com/playground?model=moonshotai%2FKimi-K2-Thinking) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                                |
+| 🤗 Hugging Face | [moonshotai/Kimi-K2-Thinking](https://huggingface.co/moonshotai/Kimi-K2-Thinking)                       |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                      |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

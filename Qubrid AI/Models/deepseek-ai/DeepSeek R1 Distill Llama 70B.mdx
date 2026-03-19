@@ -1,0 +1,366 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+<div align="center">
+**DeepSeek · Chat / LLM · 70B Parameters · 64K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/deepseek-ai-deepseek-r1-distill-llama-70b)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-deepseek--ai%2Fdeepseek--r1--distill--llama--70b-orange?style=flat-square)](https://huggingface.co/deepseek-ai/deepseek-r1-distill-llama-70b)
+
+`Streaming` `Reasoning` `Chain-of-Thought` `Code` `Long Context` `Chat`
+
+---
+</div>
+
+## Overview
+
+**DeepSeek R1 Distill LLaMA 70B** is a knowledge-distilled reasoning model built on the LLaMA-3.1-70B architecture, trained on high-quality reasoning outputs from DeepSeek R1. It delivers near frontier-level analytical performance while running on significantly smaller hardware than the full R1 model — making it ideal for teams that need powerful chain-of-thought reasoning without the infrastructure overhead of a 671B parameter system. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🧠 **Frontier reasoning. Distilled efficiency.**
+>
+> Run DeepSeek R1 intelligence on [Qubrid AI](https://platform.qubrid.com) — no GPUs, no setup, no ops.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                  |
+| -------------------- | ------------------------------------------------------------------------ |
+| **Model ID**         | `deepseek-ai/deepseek-r1-distill-llama-70b`                              |
+| **Provider**         | DeepSeek                                                                 |
+| **Kind**             | Chat / LLM                                                               |
+| **Architecture**     | LLaMA-3.1-70B (Distilled)                                                |
+| **Parameters**       | 70B                                                                      |
+| **Context Length**   | 64,000 Tokens                                                            |
+| **MoE**              | No                                                                       |
+| **Release Date**     | January 2025                                                             |
+| **License**          | DeepSeek R1 License (MIT)                                                |
+| **Training Data**    | Distilled from DeepSeek R1 high-quality reasoning outputs with Llama 70B |
+| **Function Calling** | Not Supported                                                            |
+| **Image Support**    | N/A                                                                      |
+| **Serverless API**   | Available                                                                |
+| **Fine-tuning**      | Coming Soon                                                              |
+| **On-demand**        | Coming Soon                                                              |
+| **State**            | 🟢 Ready                                                                 |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $1.20               |
+| **Output Tokens** | $1.80               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+  base_url="https://platform.qubrid.com/v1",
+  api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+  model="deepseek-ai/deepseek-r1-distill-llama-70b",
+  messages=[
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens=10000,
+  temperature=0.3,
+  top_p=1,
+  stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+  if chunk.choices and chunk.choices[0].delta.content:
+      print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "deepseek-ai/deepseek-r1-distill-llama-70b",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 10000,
+  temperature: 0.3,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "deepseek-ai/deepseek-r1-distill-llama-70b",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.3,
+		"max_tokens":  10000,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "deepseek-ai/deepseek-r1-distill-llama-70b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.3,
+  "max_tokens": 10000,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Explain quantum computing in simple terms`
+
+**Response:**
+
+```
+<think>
+The user wants a simple, accessible explanation of quantum computing.
+I'll cover the core concepts — bits vs qubits, superposition,
+entanglement — and ground it in practical applications.
+</think>
+
+Quantum computing, simplified:
+
+Classical computers process information as bits — each is either 0 or 1.
+
+Quantum computers use qubits, which exploit quantum mechanics to exist
+as 0, 1, or both simultaneously (superposition). This allows them to
+evaluate enormous numbers of possibilities in parallel.
+
+Two foundational principles:
+
+  1. Superposition  — a qubit can represent multiple states at once
+                      until it is measured
+  2. Entanglement   — qubits can be correlated so that the state of
+                      one instantly informs the state of another,
+                      regardless of distance
+
+Why does this matter?
+
+Quantum computers aren't faster at everything — they're exponentially
+more powerful for specific problem types:
+
+  - Simulating molecular and chemical interactions (drug discovery)
+  - Breaking and building cryptographic systems
+  - Optimization across logistics, finance, and scheduling
+  - Accelerating certain machine learning workloads
+
+The practical reality: we're still in the early era of quantum computing.
+Today's machines are noisy and error-prone. But progress is accelerating,
+and the implications for science and industry are profound.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b) lets you interact with DeepSeek R1 Distill LLaMA 70B directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Shape the model's reasoning approach, output format, and domain focus before the conversation begins — ideal for technical assistants, structured analysis pipelines, and multi-turn problem-solving workflows.
+
+```
+Example: "You are a highly precise technical analyst. Think through every
+problem step by step before answering. Show your reasoning clearly,
+and flag any assumptions you make along the way."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's reasoning depth and output structure with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                   | Assistant Response                                                                                                                                                                   |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `What is the time complexity of merge sort?` | `Merge sort has O(n log n) time complexity in all cases — best, average, and worst. This is because the array is divided log n times and each division requires O(n) work to merge.` |
+| `Solve: if 3x + 7 = 22, what is x?`          | `Step 1: Subtract 7 from both sides → 3x = 15. Step 2: Divide by 3 → x = 5.`                                                                                                         |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b) to shape reasoning style and output format — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter             | Type    | Default  | Description                                                                                                                                          |
+| --------------------- | ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Streaming**         | boolean | `true`   | Enable streaming responses for real-time output                                                                                                      |
+| **Temperature**       | number  | `0.3`    | Controls creativity and randomness. Higher values produce more diverse output                                                                        |
+| **Max Tokens**        | number  | `10000`  | Defines the maximum number of tokens the model is allowed to generate                                                                                |
+| **Top P**             | number  | `1`      | Nucleus sampling: limits token selection to a subset of top probability mass                                                                         |
+| **Reasoning Effort**  | select  | `medium` | Adjusts the depth of reasoning and problem-solving effort. Higher settings yield more thorough responses at the cost of latency                      |
+| **Reasoning Summary** | select  | `auto`   | Controls verbosity of reasoning explanations. `auto` lets the model decide; `concise` gives brief summaries; `detailed` offers in-depth explanations |
+
+---
+
+## Use Cases
+
+1. Advanced reasoning and problem solving
+2. Conversational AI
+3. Technical and coding assistance
+4. Long-form text generation
+5. Math and logic tasks
+6. Research and analysis
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                  | Limitations                                      |
+| ---------------------------------------------------------- | ------------------------------------------------ |
+| Excellent reasoning and chain-of-thought capability        | Slightly slower than smaller distilled models    |
+| Lower GPU memory requirement compared to the full R1 model | Reasoning quality may vary in very complex tasks |
+| Strong performance across technical and multilingual tasks | Function calling not supported                   |
+| Open-source and suitable for on-prem deployment            |                                                  |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 🧠 **Reasoning at scale** — distilled R1 intelligence served with Qubrid's low-latency infrastructure
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                                                               |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                                                       |
+| 🎮 Playground   | [Try DeepSeek R1 Distill LLaMA 70B live](https://platform.qubrid.com/playground?model=deepseek-ai%2Fdeepseek-r1-distill-llama-70b) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                                                           |
+| 🤗 Hugging Face | [deepseek-ai/deepseek-r1-distill-llama-70b](https://huggingface.co/deepseek-ai/deepseek-r1-distill-llama-70b)                      |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                                                 |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

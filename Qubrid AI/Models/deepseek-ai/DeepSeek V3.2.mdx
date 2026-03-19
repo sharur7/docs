@@ -1,0 +1,363 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**DeepSeek · Chat / LLM · 685B Parameters · 128K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/deepseek-ai-DeepSeek-V3.2)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-deepseek--ai%2FDeepSeek--V3.2-orange?style=flat-square)](https://huggingface.co/deepseek-ai/DeepSeek-V3.2)
+
+`Streaming` `Reasoning` `Code` `Long Context` `Agentic Tool Use` `Chat`
+
+---
+</div>
+
+## Overview
+
+**DeepSeek V3.2** is DeepSeek's frontier open-source model with **685B total parameters** and novel **DeepSeek Sparse Attention (DSA)** that reduces long-context computational cost by 50%. Trained with a scalable RL framework across 1,800+ agentic environments, it achieves performance comparable to GPT-5 — earning gold-medal results at both the **2025 IMO and IOI**. With integrated reasoning and tool-use capabilities through large-scale agentic synthesis, DeepSeek V3.2 represents a landmark in open-source frontier AI. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🏆 **Gold-medal IMO 2025 & IOI 2025. GPT-5-class performance. Fully open-source.**
+>
+> Deploy via [Qubrid AI](https://platform.qubrid.com) — no H100 cluster required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                                                    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Model ID**         | `deepseek-ai/DeepSeek-V3.2`                                                                                                |
+| **Provider**         | DeepSeek                                                                                                                   |
+| **Kind**             | Chat / LLM                                                                                                                 |
+| **Architecture**     | DeepSeek Sparse Attention (DSA) MoE Transformer — 685B total, 256 experts per layer (8 activated per token), MLA attention |
+| **Parameters**       | 685B total                                                                                                                 |
+| **Context Length**   | 128,000 Tokens                                                                                                             |
+| **MoE**              | No                                                                                                                         |
+| **Release Date**     | December 2025                                                                                                              |
+| **License**          | MIT                                                                                                                        |
+| **Training Data**    | Large-scale diverse corpus + RL post-training with 1,800+ agentic environments and 85,000 complex prompts                  |
+| **Function Calling** | Not Supported                                                                                                              |
+| **Image Support**    | N/A                                                                                                                        |
+| **Serverless API**   | Available                                                                                                                  |
+| **Fine-tuning**      | Coming Soon                                                                                                                |
+| **On-demand**        | Coming Soon                                                                                                                |
+| **State**            | 🟢 Ready                                                                                                                   |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type                | Price per 1M Tokens |
+| ------------------------- | ------------------- |
+| **Input Tokens**          | $0.56               |
+| **Input Tokens (Cached)** | $0.28               |
+| **Output Tokens**         | $1.68               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Temperature note:** Use `1.0` (default) for optimal performance with this model.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="deepseek-ai/DeepSeek-V3.2",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "deepseek-ai/DeepSeek-V3.2",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 8192,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "deepseek-ai/DeepSeek-V3.2",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "deepseek-ai/DeepSeek-V3.2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Explain quantum computing in simple terms`
+
+**Response:**
+
+```
+Quantum computing is a fundamentally different way of processing information
+— one that exploits the laws of quantum mechanics rather than classical physics.
+
+Classical computers store data as bits: each bit is either 0 or 1.
+
+Quantum computers use qubits, which can exist as 0, 1, or any combination
+of both simultaneously — a property called superposition. This allows a
+quantum computer to evaluate an enormous number of possible states at once,
+rather than one at a time.
+
+Two key properties make this possible:
+
+  Superposition   — a qubit holds multiple values simultaneously until measured
+  Entanglement    — two qubits can be correlated so that the state of one
+                    instantly determines the other, enabling massively
+                    parallel computation across linked qubit pairs
+
+Where quantum computers outperform classical machines:
+
+  • Cryptography        — breaking and constructing encryption systems
+  • Drug discovery      — simulating molecular structures at atomic resolution
+  • Optimization        — solving logistics, scheduling, and financial problems
+  • AI acceleration     — certain training and inference workloads
+
+The important caveat: quantum computers aren't general-purpose replacements
+for classical computers. They are precision instruments — extraordinarily
+powerful for specific problem classes that are intractable for even the
+fastest supercomputers today.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2) lets you interact with DeepSeek V3.2 directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's role, reasoning depth, and output constraints before the conversation begins — essential for agentic workflows, structured analysis, and complex multi-turn tasks.
+
+```
+Example: "You are an expert software architect. Analyze problems from first
+principles, propose solutions with trade-offs clearly articulated,
+and always output code in production-ready style with inline comments."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's reasoning approach and output format with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                           | Assistant Response                                                                                                                                                                                      |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Prove that there are infinitely many prime numbers` | `Assume finitely many primes p₁...pₙ. Let N = (p₁×p₂×...×pₙ) + 1. N is either prime (contradiction) or divisible by a prime not in our list (contradiction). Therefore infinitely many primes exist. ∎` |
+| `Write a binary search in Python`                    | `def binary_search(arr, target): l, r = 0, len(arr)-1 \n while l <= r: \n  mid = (l+r)//2 \n  if arr[mid] == target: return mid \n  elif arr[mid] < target: l = mid+1 \n  else: r = mid-1 \n return -1` |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2) to dial in reasoning depth, output format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                     |
+| --------------- | ------- | ------- | ----------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output |
+| **Temperature** | number  | `1`     | Recommended `1.0` for optimal performance       |
+| **Max Tokens**  | number  | `8192`  | Maximum number of tokens to generate            |
+| **Top P**       | number  | `0.95`  | Controls nucleus sampling                       |
+
+---
+
+## Use Cases
+
+1. Advanced reasoning and agent tasks
+2. Long-horizon agentic tool use
+3. Mathematical competition problems (IMO/IOI level)
+4. Code generation and complex debugging
+5. Enterprise automation
+6. Long-context document analysis
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                         | Limitations                                                   |
+| ----------------------------------------------------------------- | ------------------------------------------------------------- |
+| DeepSeek Sparse Attention — 50% compute savings on long contexts  | 128K max context window                                       |
+| GPT-5-class performance on reasoning benchmarks                   | Requires H100/H200 class infrastructure for full self-hosting |
+| Gold-medal IMO 2025 and IOI 2025 performance                      | No official Jinja chat template — custom encoding required    |
+| 685B MoE with efficient inference (8 experts activated per token) | Tool calling may need warm-up on cold-start phases            |
+| Integrated reasoning into tool-use via RL synthesis               | Function calling not supported via API                        |
+| MIT License — fully open source                                   |                                                               |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 685B MoE served serverlessly, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 💰 **Cached input pricing** — $0.28/1M for cached tokens, dramatically reducing costs on repeated long contexts
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                       |
+| 🎮 Playground   | [Try DeepSeek V3.2 live](https://platform.qubrid.com/playground?model=deepseek-ai%2FDeepSeek-V3.2) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                           |
+| 🤗 Hugging Face | [deepseek-ai/DeepSeek-V3.2](https://huggingface.co/deepseek-ai/DeepSeek-V3.2)                      |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                 |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

@@ -1,0 +1,359 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**OpenAI · Chat / LLM · 20.9B Parameters · 131K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/openai-gpt-oss-20b)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-openai%2Fgpt--oss--20b-orange?style=flat-square)](https://huggingface.co/openai/gpt-oss-20b)
+
+`Function Calling` `Tool Calling` `Streaming` `Reasoning` `Agent Workflows` `Code`
+
+---
+</div>
+
+## Overview
+
+**gpt-oss-20b** is part of OpenAI's open-weight gpt-oss series — purpose-built for powerful reasoning, agentic tasks, and versatile developer use cases. At ~21B parameters with a compact Mixture-of-Experts (MoE) architecture, it activates only **3.6B parameters during inference**, making it exceptionally fast and efficient for local deployments, low-latency pipelines, and single-GPU setups. With configurable reasoning depth and native function calling support, gpt-oss-20b punches well above its weight class.
+
+> ⚡ **Single B200 GPU deployment** — production-grade intelligence without the infrastructure overhead.
+>
+> Deploy via [Qubrid AI](https://platform.qubrid.com) in minutes.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| **Model ID**         | `openai/gpt-oss-20b`                                                                         |
+| **Provider**         | OpenAI                                                                                       |
+| **Kind**             | Chat / LLM                                                                                   |
+| **Architecture**     | Compact MoE with SwiGLU activations, Token-choice MoE, Alternating attention mechanism       |
+| **Model Size**       | 20.9B Params (~3.6B active during inference)                                                 |
+| **Context Length**   | 131,072 Tokens                                                                               |
+| **MoE**              | No                                                                                           |
+| **Release Date**     | August 2024                                                                                  |
+| **License**          | Apache 2.0                                                                                   |
+| **Training Data**    | Comprehensive safety evaluation and testing protocols, global community feedback integration |
+| **Function Calling** | Supported                                                                                    |
+| **Serverless API**   | Available                                                                                    |
+| **Fine-tuning**      | Coming Soon                                                                                  |
+| **On-demand**        | Coming Soon                                                                                  |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.05               |
+| **Output Tokens** | $0.28               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+  base_url="https://platform.qubrid.com/v1",
+  api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+  model="openai/gpt-oss-20b",
+  messages=[
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens=4096,
+  temperature=0.7,
+  top_p=1,
+  stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+  if chunk.choices and chunk.choices[0].delta.content:
+      print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "openai/gpt-oss-20b",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "openai/gpt-oss-20b",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "openai/gpt-oss-20b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Explain quantum computing in simple terms`
+
+**Response:**
+
+```
+Quantum Computing — Plain and Simple
+
+Classical computers store information as bits: each bit is either 0 or 1.
+
+Quantum computers use qubits, which can be 0, 1, or both simultaneously
+(called superposition) — like a coin mid-spin before it lands.
+
+This lets quantum computers evaluate many possible solutions in parallel,
+making them dramatically faster for certain problem types:
+
+  - Cryptography and security
+  - Drug discovery and molecular simulation
+  - Financial optimization and risk modeling
+  - Complex logistics and scheduling
+
+Two key principles at work:
+  1. Superposition  — qubits exist in multiple states at once
+  2. Entanglement   — qubits can be linked so the state of one
+                      instantly influences another, enabling
+                      massively coordinated computation
+
+The bottom line: classical computers handle most tasks well.
+Quantum computers are a specialized tool for problems that would
+take even the fastest supercomputers millions of years to crack.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b) lets you experiment with gpt-oss-20b directly in your browser — no code, no setup, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's persona, constraints, and behavior before the conversation begins — ideal for role-specific assistants, domain-locked bots, or output format control.
+
+```
+Example: "You are a concise technical assistant. Always respond in bullet points,
+limit answers to 5 bullets max, and never use jargon without explaining it."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b) and it persists across the entire conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Show the model exactly what good looks like — before your real query. No fine-tuning, no retraining. Just examples.
+
+| User Input                                       | Assistant Response                                                                                                                                                                |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Write a function to reverse a string in Python` | `def reverse_string(s: str) -> str: return s[::-1]`                                                                                                                               |
+| `Explain what an API is`                         | `An API (Application Programming Interface) is a contract between two software systems that defines how they communicate — what requests are valid and what responses to expect.` |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b) to progressively refine tone, format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                                       |
+| --------------- | ------- | ------- | --------------------------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                                   |
+| **Temperature** | number  | `0.7`   | Controls randomness. Higher values mean more creative but less predictable output |
+| **Max Tokens**  | number  | `4096`  | Maximum number of tokens to generate in the response                              |
+| **Top P**       | number  | `1`     | Nucleus sampling: considers tokens with top_p probability mass                    |
+
+---
+
+## Use Cases
+
+1. Function calling with schemas
+2. Web browsing and browser automation
+3. Agentic tasks
+4. Chain-of-thought reasoning
+5. Local and low-latency deployments
+6. Rapid prototyping and development support
+7. Code generation and optimization
+8. Customer support automation
+9. Content generation and editing
+10. Process automation and workflow optimization
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                          | Limitations                                                 |
+| ------------------------------------------------------------------ | ----------------------------------------------------------- |
+| Compact MoE design with SwiGLU activations for efficient inference | Smaller capacity than largest frontier models               |
+| Token-choice MoE optimized for single-GPU efficiency               | May require fine-tuning for highly specialized domains      |
+| Native FP4 quantization for optimal inference speed                | MoE architecture adds some complexity to self-hosted setups |
+| Single B200 GPU deployment capability                              |                                                             |
+| 131K context window with efficient memory usage                    |                                                             |
+| Adjustable reasoning effort levels for task-specific optimization  |                                                             |
+| Supports function calling with defined schemas                     |                                                             |
+| Apache 2.0 license for commercial use                              |                                                             |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- ⚡ **Low-latency by design** — gpt-oss-20b is optimized for speed; Qubrid's serverless layer keeps it that way
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                      |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                              |
+| 🎮 Playground   | [Try gpt-oss-20b live](https://platform.qubrid.com/playground?model=openai%2Fgpt-oss-20b) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                  |
+| 🤗 Hugging Face | [openai/gpt-oss-20b](https://huggingface.co/openai/gpt-oss-20b)                           |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                        |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

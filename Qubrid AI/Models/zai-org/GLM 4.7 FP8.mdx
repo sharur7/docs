@@ -1,0 +1,381 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Z.ai (Zhipu AI) · Chat / LLM · 355B Parameters (32B Active) · 128K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/zai-org-GLM-4.7-FP8)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-zai--org%2FGLM--4.7--FP8-orange?style=flat-square)](https://huggingface.co/zai-org/GLM-4.7-FP8)
+
+`Streaming` `Reasoning` `Agentic Coding` `Long Context` `Code` `Tool Orchestration`
+
+---
+</div>
+
+## Overview
+
+**GLM-4.7-FP8** is the flagship model from **Z.ai** (formerly Zhipu AI) — a Chinese AI research company focused on building large-scale open-source foundation models for reasoning, coding, and agentic workflows. With **355B total parameters and 32B active per forward pass**, it introduces three novel thinking paradigms — **Interleaved Thinking**, **Preserved Thinking**, and **Turn-level Thinking** — enabling the model to reason before every action and maintain coherent reasoning state across long coding sessions. It achieves **95.7% on AIME 2025**, **73.8% on SWE-bench**, and **87.4% on τ²-Bench**, delivering frontier-level mathematical and software engineering performance at open-source scale. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🏆 **95.7% AIME 2025. 73.8% SWE-bench. 355B MoE. Interleaved Thinking.**
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no infrastructure required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                             |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| **Model ID**         | `zai-org/GLM-4.7-FP8`                                                               |
+| **Provider**         | Z.ai (formerly Zhipu AI)                                                            |
+| **Kind**             | Chat / LLM                                                                          |
+| **Architecture**     | Sparse MoE Transformer — 355B total / 32B active per token, FP8 native quantization |
+| **Parameters**       | 355B total (32B active per forward pass)                                            |
+| **Context Length**   | 128,000 Tokens                                                                      |
+| **MoE**              | No                                                                                  |
+| **Release Date**     | December 2025                                                                       |
+| **License**          | MIT (commercial use allowed)                                                        |
+| **Training Data**    | Large-scale multilingual dataset with code, math, reasoning, and agentic workflows  |
+| **Function Calling** | Not Supported                                                                       |
+| **Image Support**    | N/A                                                                                 |
+| **Serverless API**   | Available                                                                           |
+| **Fine-tuning**      | Coming Soon                                                                         |
+| **On-demand**        | Coming Soon                                                                         |
+| **State**            | 🟢 Ready                                                                            |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type                | Price per 1M Tokens |
+| ------------------------- | ------------------- |
+| **Input Tokens**          | $0.60               |
+| **Input Tokens (Cached)** | $0.30               |
+| **Output Tokens**         | $2.20               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Thinking mode:** `enable_thinking=true` by default — the model reasons before every response and tool call. Toggle per request for precise control over reasoning depth and latency.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="zai-org/GLM-4.7-FP8",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=4096,
+    temperature=0.6,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "zai-org/GLM-4.7-FP8",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.6,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "zai-org/GLM-4.7-FP8",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.6,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "zai-org/GLM-4.7-FP8",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Write a Python function to find all prime numbers up to n using the Sieve of Eratosthenes`
+
+**Response:**
+
+```
+<think>
+Classic algorithm request. I'll implement the Sieve of Eratosthenes cleanly
+with proper type hints, a docstring, and an example usage block.
+I'll also note the time complexity for completeness.
+</think>
+
+def sieve_of_eratosthenes(n: int) -> list[int]:
+    """
+    Return all prime numbers up to and including n
+    using the Sieve of Eratosthenes.
+
+    Time complexity:  O(n log log n)
+    Space complexity: O(n)
+
+    Args:
+        n: Upper bound (inclusive) for prime search.
+
+    Returns:
+        Sorted list of all primes <= n.
+    """
+    if n < 2:
+        return []
+
+    # Initialize boolean array: True = potentially prime
+    is_prime = [True] * (n + 1)
+    is_prime[0] = False
+    is_prime[1] = False
+
+    # Sieve: mark multiples of each prime as composite
+    p = 2
+    while p * p <= n:
+        if is_prime[p]:
+            for multiple in range(p * p, n + 1, p):
+                is_prime[multiple] = False
+        p += 1
+
+    return [i for i, prime in enumerate(is_prime) if prime]
+
+
+# Example usage
+if __name__ == "__main__":
+    primes = sieve_of_eratosthenes(50)
+    print(primes)
+    # Output: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8) lets you interact with GLM-4.7-FP8 directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's role, coding style, and reasoning constraints before the conversation begins. Particularly powerful for agentic coding sessions and long-horizon tool orchestration.
+
+```
+Example: "You are a senior software engineer. For every coding task:
+1. Think through the approach before writing any code.
+2. Write clean, production-ready code with type hints and docstrings.
+3. Include edge case handling and a brief complexity analysis."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8) and it applies across every turn — including preserved reasoning state across multi-turn coding sessions.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Establish your preferred code style and output format with concrete examples — no fine-tuning required. Especially powerful for consistent structured outputs in agentic pipelines.
+
+| User Input                                                         | Assistant Response                                                                                                                                                                                                     |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Write a function to check if a binary tree is balanced`           | `def is_balanced(root) -> bool: def height(node): if not node: return 0; l, r = height(node.left), height(node.right); if l == -1 or r == -1 or abs(l-r) > 1: return -1; return max(l,r)+1; return height(root) != -1` |
+| `Refactor this: for i in range(len(arr)): result.append(arr[i]*2)` | `result = [x * 2 for x in arr]  # List comprehension: cleaner and faster`                                                                                                                                              |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8) to establish coding style, language preference, and output structure — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter           | Type    | Default | Description                                                                                                    |
+| ------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| **Streaming**       | boolean | `true`  | Enable streaming responses for real-time output                                                                |
+| **Temperature**     | number  | `0.6`   | Controls randomness. Lower values recommended for reasoning and coding                                         |
+| **Max Tokens**      | number  | `4096`  | Maximum number of tokens to generate                                                                           |
+| **Top P**           | number  | `1`     | Controls nucleus sampling                                                                                      |
+| **Enable Thinking** | boolean | `true`  | Enable Interleaved Thinking mode — the model reasons before every response and tool call for improved accuracy |
+
+---
+
+## Use Cases
+
+1. Agentic multilingual coding
+2. Terminal-based task automation
+3. Vibe coding and UI generation
+4. Complex mathematical reasoning
+5. Tool orchestration (Claude Code, Cline, Roo Code)
+6. Long-horizon multi-turn tasks
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                                | Limitations                                                           |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| Interleaved Thinking — reasons before every response and tool call       | Very large model requires significant infrastructure for self-hosting |
+| Preserved Thinking — retains reasoning state across long coding sessions | FP8 inference requires natively supporting hardware                   |
+| Turn-level control over thinking depth per request                       | Thinking mode increases latency                                       |
+| 355B MoE with 32B active — frontier reasoning at low cost                | Function calling not supported                                        |
+| 95.7% AIME 2025 — state-of-the-art mathematical reasoning                |                                                                       |
+| Open-source with MIT license — full commercial use permitted             |                                                                       |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 355B MoE served serverlessly, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 💰 **Cached input pricing** — $0.30/1M for cached tokens, ideal for long agentic coding sessions
+- 🧠 **Interleaved Thinking on demand** — toggle reasoning depth per request via the API without managing model configuration
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                               |
+| 🎮 Playground   | [Try GLM-4.7-FP8 live](https://platform.qubrid.com/playground?model=zai-org%2FGLM-4.7-FP8) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                   |
+| 🤗 Hugging Face | [zai-org/GLM-4.7-FP8](https://huggingface.co/zai-org/GLM-4.7-FP8)                          |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                         |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

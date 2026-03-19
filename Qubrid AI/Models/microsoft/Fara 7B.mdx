@@ -1,0 +1,351 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%"/>
+</div>
+
+
+<div align="center">
+**Microsoft · Chat / LLM · 7B Parameters · 8K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/microsoft-Fara-7B)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-microsoft%2FFara--7B-orange?style=flat-square)](https://huggingface.co/microsoft/Fara-7B)
+
+`Streaming` `Instruction Following` `Code` `Chat`
+
+---
+</div>
+
+## Overview
+
+**Fara 7B** is a compact and efficient transformer model developed by Microsoft for high-speed inference, instruction following, text generation, and lightweight reasoning tasks. Its small parameter size allows easy deployment on consumer GPUs and edge devices while maintaining strong performance. Whether you're building customer-facing assistants, content pipelines, or developer tooling, Fara 7B delivers reliable, low-latency responses at a fraction of the cost of larger models.
+
+> 🏎️ **Runs on consumer GPUs and edge devices** — fast, lightweight, and production-ready.
+>
+> Deploy via the [Qubrid AI Serverless API](https://platform.qubrid.com) for just $0.21 / 1M input tokens.
+
+---
+
+## Model Specifications
+
+| Field | Details |
+|---|---|
+| **Model ID** | `microsoft/Fara-7B` |
+| **Provider** | Microsoft |
+| **Kind** | Chat / LLM |
+| **Architecture** | Decoder-only Transformer |
+| **Parameters** | 7B |
+| **Context Length** | 8,192 Tokens |
+| **MoE** | No |
+| **Release Date** | 2025 |
+| **License** | MIT |
+| **Training Data** | Mixed web, curated instructional datasets, code, and multilingual corpora |
+| **Function Calling** | Not Supported |
+| **Image Support** | N/A |
+| **Serverless API** | Available |
+| **Fine-tuning** | Coming Soon |
+| **On-demand** | Coming Soon |
+| **State** | 🟢 Ready |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type | Price per 1M Tokens |
+|---|---|
+| **Input Tokens** | $0.21 |
+| **Output Tokens** | $0.25 |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+  base_url="https://platform.qubrid.com/v1",
+  api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+  model="microsoft/Fara-7B",
+  messages=[
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens=4096,
+  temperature=0.7,
+  top_p=1,
+  stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+  if chunk.choices and chunk.choices[0].delta.content:
+      print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from 'openai';
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: 'https://platform.qubrid.com/v1',
+  apiKey: 'QUBRID_API_KEY',
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: 'microsoft/Fara-7B',
+  messages: [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 1,
+  stream: true
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log('\n');
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "microsoft/Fara-7B",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "microsoft/Fara-7B",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Explain quantum computing in simple terms`
+
+**Response:**
+
+```
+Quantum computing uses quantum mechanics to process information differently
+from classical computers.
+
+Classical computers use bits — each is a 0 or a 1.
+Quantum computers use qubits, which can be 0, 1, or both at once
+(called superposition).
+
+This means a quantum computer can explore many solutions at the same time,
+rather than checking them one by one — making it exponentially faster
+for certain types of problems:
+
+  - Encryption and cybersecurity
+  - Simulating molecular structures for drug discovery
+  - Optimization in finance and logistics
+
+Another key property: entanglement — two qubits can be linked so that
+knowing the state of one instantly tells you something about the other,
+enabling highly coordinated computation at scale.
+
+Quantum computers aren't replacing laptops anytime soon.
+They're a precision tool for problems that would take classical machines
+millions of years to solve.
+```
+
+*Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B)*
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B) lets you chat with Fara 7B directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Set the model's role, tone, and boundaries before the conversation begins. Perfect for focused assistants and domain-specific bots — without touching any code.
+
+```
+Example: "You are a helpful product assistant for an e-commerce store.
+Only answer questions about products, orders, and returns.
+Always respond in a friendly, concise tone."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Show the model exactly what good output looks like — before your real query. No fine-tuning, no retraining required.
+
+| User Input | Assistant Response |
+|---|---|
+| `Write a product description for wireless headphones` | `Experience music like never before. These wireless headphones deliver rich, immersive sound with up to 30 hours of battery life — so you can keep going, even when the playlist doesn't stop.` |
+| `Summarize this support ticket in one line` | `Customer is unable to log in due to a forgotten password and is requesting a reset link.` |
+
+> 💡 Add few-shot examples directly in the [Qubrid Playground](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B) to dial in tone, format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| **Streaming** | boolean | `true` | Enable streaming responses for real-time output |
+| **Temperature** | number | `0.7` | Controls creativity and randomness. Higher values produce more diverse output |
+| **Max Tokens** | number | `4096` | Maximum number of tokens the model can generate |
+| **Top P** | number | `1` | Nucleus sampling: restricts token selection to a probability mass threshold |
+
+---
+
+## Use Cases
+
+1. Customer-facing chatbots and virtual assistants that handle FAQs and multi-turn dialogue
+2. Long-form and short-form content generation such as blogs, emails, and product descriptions
+3. Developer code assistance for completion, explanation, and small refactors
+4. General question answering over product, documentation, or knowledge-base content
+5. Summarization of long documents, transcripts, and knowledge-dense articles
+
+---
+
+## Strengths & Limitations
+
+| Strengths | Limitations |
+|---|---|
+| Runs efficiently on consumer and cloud GPUs | Lower reasoning capability than larger models (30B–120B) |
+| Strong instruction-following capability for a 7B model | Limited long-context performance (8K window) |
+| Optimized for low-latency inference | May require fine-tuning for specialized domain tasks |
+| Open weights allow on-prem and edge deployment | Function calling not supported |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- ⚡ **Edge-optimized serving** — Fara 7B's compact footprint meets Qubrid's low-latency infrastructure
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource | Link |
+|---|---|
+| 📖 Qubrid Docs | [docs.platform.qubrid.com](https://docs.platform.qubrid.com) |
+| 🎮 Playground | [Try Fara 7B live](https://platform.qubrid.com/playground?model=microsoft%2FFara-7B) |
+| 🔑 API Keys | [Get your API Key](https://platform.qubrid.com/api-keys) |
+| 🤗 Hugging Face | [microsoft/Fara-7B](https://huggingface.co/microsoft/Fara-7B) |
+| 💬 Discord | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ) |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

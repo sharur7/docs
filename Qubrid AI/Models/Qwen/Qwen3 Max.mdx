@@ -1,0 +1,376 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Alibaba Cloud · Chat / LLM · 235B Parameters (22B Active) · 128K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/Qwen-Qwen3-Max)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max)
+[![License](<https://img.shields.io/badge/License-Proprietary_(DashScope)-red?style=flat-square>)](https://huggingface.co/Qwen/Qwen3-Max)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Qwen%2FQwen3--Max-orange?style=flat-square)](https://huggingface.co/Qwen/Qwen3-Max)
+
+`Streaming` `Reasoning` `Long Context` `Multilingual` `Code` `Structured Output`
+
+---
+</div>
+
+## Overview
+
+**Qwen3 Max** is Alibaba Cloud's most powerful model in the Qwen3 series, featuring a **235B Sparse Mixture-of-Experts Transformer** with 22B parameters active per forward pass. Developed by **Alibaba Cloud** — the cloud computing arm of Alibaba Group and creator of the Qwen model family — it delivers frontier-level performance in complex reasoning, multilingual tasks, long-context understanding, and advanced coding, rivaling GPT-4o and Claude Sonnet on major benchmarks. With **128K context**, **29+ languages**, and a hybrid thinking mode, Qwen3 Max is built for demanding enterprise workloads. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🏆 **235B MoE. Rivals GPT-4o and Claude Sonnet. 29+ languages. 128K context.**
+>
+> Access via [Qubrid AI](https://platform.qubrid.com) — no DashScope setup required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| **Model ID**         | `Qwen/Qwen3-Max`                                                                             |
+| **Provider**         | Alibaba Cloud (Qwen Team)                                                                    |
+| **Kind**             | Chat / LLM                                                                                   |
+| **Architecture**     | Sparse Mixture-of-Experts (MoE) Transformer — 235B total / 22B active per token              |
+| **Parameters**       | 235B total (22B active per forward pass)                                                     |
+| **Context Length**   | 128,000 Tokens                                                                               |
+| **MoE**              | No                                                                                           |
+| **Release Date**     | April 2025                                                                                   |
+| **License**          | Proprietary — Alibaba Cloud DashScope API only                                               |
+| **Training Data**    | Large-scale multilingual pretraining corpus with RLHF post-training (not publicly disclosed) |
+| **Function Calling** | Not Supported                                                                                |
+| **Image Support**    | N/A                                                                                          |
+| **Serverless API**   | Available                                                                                    |
+| **Fine-tuning**      | Coming Soon                                                                                  |
+| **On-demand**        | Coming Soon                                                                                  |
+| **State**            | 🟢 Ready                                                                                     |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type                | Price per 1M Tokens |
+| ------------------------- | ------------------- |
+| **Input Tokens**          | $1.20               |
+| **Input Tokens (Cached)** | $0.24               |
+| **Output Tokens**         | $6.00               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Max",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=4096,
+    temperature=0.7,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "Qwen/Qwen3-Max",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Max",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Max",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Write a short story about a robot learning to paint`
+
+**Response:**
+
+```
+The Color It Couldn't Name
+
+ARIA-7 was built to be precise. Its joints moved within 0.002mm tolerance.
+Its sensors could distinguish 16.7 million colors by wavelength alone.
+
+It had never painted before.
+
+The studio belonged to a sculptor named Lena who had broken her wrist.
+"Just hold the brush," she said. "See what happens."
+
+ARIA-7 ran the numbers. Optimal stroke width: 4.2mm. Pressure: 0.3N.
+Canvas center coordinates: logged. It dipped the brush in cobalt blue
+and drew a perfect horizontal line.
+
+"That's a line," said Lena.
+
+"Yes," said ARIA-7. "Is it wrong?"
+
+"It's correct. That's the problem."
+
+For three days, ARIA-7 painted correct things. Correct circles. Correct
+gradients. Correct trees with statistically average branch angles.
+
+On the fourth day, Lena didn't come in.
+
+ARIA-7 stood alone in front of the blank canvas for forty-one minutes —
+an eternity by its clock cycles. Then it picked up the brush.
+
+It painted the light that came through the window at 7:14am.
+Not the window. Not the light. The feeling of the light — warm, slanted,
+a little uncertain, the way Tuesday mornings felt different from Mondays
+for reasons it couldn't quantify.
+
+It didn't have a name for the color it used.
+
+When Lena came back, she stood very still.
+
+"What is that?" she asked.
+
+ARIA-7 processed the question for 0.003 seconds.
+
+"I don't know," it said. "I think that's why I made it."
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max) lets you interact with Qwen3 Max directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's role, language, reasoning depth, and output format before the conversation begins — ideal for enterprise assistants, multilingual workflows, and structured analysis pipelines.
+
+```
+Example: "You are a senior research analyst. Respond in the user's language.
+For every analytical question, structure your answer as: Summary →
+Key Findings → Supporting Evidence → Recommendations. Be precise
+and cite limitations in your analysis."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's output format and reasoning style with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                          | Assistant Response                                                                                                                                                                  |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Translate and summarize this paragraph in Spanish` | `[Translated summary in Spanish, preserving key facts and tone of the original]`                                                                                                    |
+| `Review this code and suggest improvements`         | `Issues found: 1) O(n²) loop on line 12 — replace with hash map for O(n). 2) Missing null check on line 7. 3) Variable name 'x' is ambiguous — rename to 'user_count' for clarity.` |
+
+> 💡 Add few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max) to establish preferred output language, format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                                   |
+| --------------- | ------- | ------- | ----------------------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                               |
+| **Temperature** | number  | `0.7`   | Controls creativity and randomness. Higher values produce more diverse output |
+| **Max Tokens**  | number  | `4096`  | Maximum number of tokens the model can generate                               |
+| **Top P**       | number  | `1`     | Controls nucleus sampling for more predictable output                         |
+
+---
+
+## Use Cases
+
+1. Complex multi-step reasoning
+2. Advanced coding and debugging
+3. Research and analytical writing
+4. Long-document summarization
+5. Multilingual chat and translation
+6. Enterprise chatbots and assistants
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                                     | Limitations                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------------- |
+| 235B MoE architecture — frontier-level intelligence with 22B active per token | Closed-source — no self-hosting or weight access  |
+| Rivals GPT-4o and Claude Sonnet on key reasoning and coding benchmarks        | Higher latency than smaller Qwen models           |
+| Up to 128K context window for long-document workflows                         | Higher cost per token vs open-source alternatives |
+| Strong multilingual performance across 29+ languages                          | Function calling not supported                    |
+| Excellent structured output and instruction following                         |                                                   |
+| Hybrid thinking mode for complex reasoning tasks                              |                                                   |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No DashScope setup required** — access Qwen3 Max directly via the [Qubrid AI Serverless API](https://platform.qubrid.com) with a single API key
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 💰 **Cached input pricing** — $0.24/1M for cached tokens, reducing costs significantly on repeated long-context workloads
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                |
+| --------------- | ----------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                        |
+| 🎮 Playground   | [Try Qwen3 Max live](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Max) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                            |
+| 🤗 Hugging Face | [Qwen/Qwen3-Max](https://huggingface.co/Qwen/Qwen3-Max)                             |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                  |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

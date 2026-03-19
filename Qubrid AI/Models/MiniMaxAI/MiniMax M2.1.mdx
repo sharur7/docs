@@ -1,0 +1,439 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**MiniMax · Chat / LLM · 230B Parameters (10B Active) · 200K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/MiniMaxAI-MiniMax-M2.1)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1)
+[![License](https://img.shields.io/badge/License-Modified_MIT-blue?style=flat-square)](https://github.com/MiniMax-AI/MiniMax-M2.1/blob/main/LICENSE)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-MiniMaxAI%2FMiniMax--M2.1-orange?style=flat-square)](https://huggingface.co/MiniMaxAI/MiniMax-M2.1)
+
+`Streaming` `Agentic Coding` `Long Context` `Code` `Tool Use` `Polyglot`
+
+---
+</div>
+
+## Overview
+
+**MiniMax M2.1** is the flagship open-source coding and agentic model from **MiniMax** — a Chinese AI research company focused on building large-scale open-source foundation models for coding, reasoning, and agentic workflows. With **230B total parameters and only 10B active per token** (23:1 sparsity ratio), it achieves **74% on SWE-bench Verified** — competitive with Claude Sonnet 4.5 — at a fraction of the cost. It delivers best-in-class polyglot coding across **Python, Java, Go, Rust, C++, TypeScript, and Kotlin**, with a 200K context window and FP8 native quantization for production-grade efficiency. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 💻 **74% SWE-bench Verified. 23:1 sparsity. Claude Sonnet 4.5-level coding at open-source cost.**
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no multi-GPU cluster required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| **Model ID**         | `MiniMaxAI/MiniMax-M2.1`                                                                  |
+| **Provider**         | MiniMax                                                                                   |
+| **Kind**             | Chat / LLM                                                                                |
+| **Architecture**     | Sparse MoE Transformer — 230B total / 10B active per token, FP8 quantization              |
+| **Parameters**       | 230B total (10B active per forward pass)                                                  |
+| **Context Length**   | 200,000 Tokens                                                                            |
+| **MoE**              | No                                                                                        |
+| **Release Date**     | December 2025                                                                             |
+| **License**          | Modified MIT License                                                                      |
+| **Training Data**    | Large-scale multilingual code and instruction datasets across major programming languages |
+| **Function Calling** | Not Supported                                                                             |
+| **Image Support**    | N/A                                                                                       |
+| **Serverless API**   | Available                                                                                 |
+| **Fine-tuning**      | Coming Soon                                                                               |
+| **On-demand**        | Coming Soon                                                                               |
+| **State**            | 🟢 Ready                                                                                  |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type                | Price per 1M Tokens |
+| ------------------------- | ------------------- |
+| **Input Tokens**          | $0.30               |
+| **Input Tokens (Cached)** | $0.03               |
+| **Output Tokens**         | $1.20               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Recommended parameters:** Use `temperature=1.0`, `top_p=0.95`, `top_k=40` for best performance — as specified by MiniMax on the official model card.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="MiniMaxAI/MiniMax-M2.1",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=1,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "MiniMaxAI/MiniMax-M2.1",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 8192,
+  temperature: 1,
+  top_p: 0.95,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "MiniMaxAI/MiniMax-M2.1",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 1,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "MiniMaxAI/MiniMax-M2.1",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 1,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Write a type-safe REST API client in TypeScript with error handling and retry logic`
+
+**Response:**
+
+```typescript
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+
+interface RetryConfig {
+  maxRetries: number;
+  delayMs: number;
+  backoffMultiplier: number;
+}
+
+interface ApiClientConfig {
+  baseURL: string;
+  timeout?: number;
+  retry?: RetryConfig;
+  headers?: Record<string, string>;
+}
+
+class ApiError extends Error {
+  constructor(
+    public statusCode: number,
+    public message: string,
+    public data?: unknown,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+class RestApiClient {
+  private client: AxiosInstance;
+  private retryConfig: RetryConfig;
+
+  constructor(config: ApiClientConfig) {
+    this.client = axios.create({
+      baseURL: config.baseURL,
+      timeout: config.timeout ?? 10000,
+      headers: {
+        "Content-Type": "application/json",
+        ...config.headers,
+      },
+    });
+
+    this.retryConfig = config.retry ?? {
+      maxRetries: 3,
+      delayMs: 500,
+      backoffMultiplier: 2,
+    };
+  }
+
+  private async executeWithRetry<T>(
+    requestFn: () => Promise<AxiosResponse<T>>,
+    attempt = 0,
+  ): Promise<T> {
+    try {
+      const response = await requestFn();
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status ?? 0;
+
+        // Don't retry client errors (4xx) except 429 (rate limit)
+        if (status >= 400 && status < 500 && status !== 429) {
+          throw new ApiError(status, error.message, error.response?.data);
+        }
+
+        if (attempt < this.retryConfig.maxRetries) {
+          const delay =
+            this.retryConfig.delayMs *
+            Math.pow(this.retryConfig.backoffMultiplier, attempt);
+          await sleep(delay);
+          return this.executeWithRetry(requestFn, attempt + 1);
+        }
+
+        throw new ApiError(status, `Max retries exceeded: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async get<T>(path: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.executeWithRetry(() => this.client.get<T>(path, config));
+  }
+
+  async post<T, B = unknown>(
+    path: string,
+    body: B,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    return this.executeWithRetry(() => this.client.post<T>(path, body, config));
+  }
+}
+
+// Usage example
+const api = new RestApiClient({
+  baseURL: "https://api.example.com",
+  retry: { maxRetries: 3, delayMs: 500, backoffMultiplier: 2 },
+});
+
+const data = await api.get<{ id: number; name: string }>("/users/1");
+console.log(data.name);
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1) lets you interact with MiniMax M2.1 directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's coding language, style, and workflow constraints before the conversation begins — ideal for polyglot development sessions and long-horizon agentic coding workflows.
+
+```
+Example: "You are a senior full-stack engineer. For every coding task:
+1. Write production-ready code with proper error handling and type safety.
+2. Include inline comments for non-obvious logic.
+3. Add a brief complexity analysis and note any edge cases."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Establish your preferred code style and language conventions with concrete examples — no fine-tuning required.
+
+| User Input                                                 | Assistant Response                                                                                                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Write a Go function to check if a number is prime`        | `func isPrime(n int) bool { if n < 2 { return false }; for i := 2; i*i <= n; i++ { if n%i == 0 { return false } }; return true }`                 |
+| `Refactor: nested for loops checking duplicates in a list` | `Use a hash set: seen := make(map[int]bool); for _, v := range list { if seen[v] { return true }; seen[v] = true }; return false — O(n) vs O(n²)` |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1) to lock in language preference, code style, and output format — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                     |
+| --------------- | ------- | ------- | ----------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output |
+| **Temperature** | number  | `1`     | Recommended at `1.0` for best performance       |
+| **Max Tokens**  | number  | `8192`  | Maximum number of tokens the model can generate |
+| **Top P**       | number  | `0.95`  | Controls nucleus sampling                       |
+| **Top K**       | number  | `40`    | Limits token sampling to top-k tokens           |
+
+---
+
+## Use Cases
+
+1. Multilingual software development
+2. Long-horizon agentic coding
+3. Code review and optimization
+4. Full-stack app generation
+5. Office automation workflows
+6. Complex multi-step tool use
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                            | Limitations                                                     |
+| -------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 74% SWE-bench Verified — competitive with Claude Sonnet 4.5          | Less reliable than frontier closed models for deep debugging    |
+| 230B MoE with only 10B active — 23:1 sparsity for extreme efficiency | Sparse activation may miss niche language idioms                |
+| 200K context window for full-codebase analysis                       | Very large model size requires multi-GPU setup for self-hosting |
+| Best-in-class polyglot coding across 7 major languages               | Function calling not supported via API                          |
+| FP8 native quantization for production-grade efficiency              |                                                                 |
+| Open weights — fully available for local and on-premise deployment   |                                                                 |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 230B MoE served serverlessly at just $0.30/1M input tokens
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 💰 **Cached input pricing** — $0.03/1M for cached tokens — the lowest cached rate across all models on the platform
+- 💻 **Polyglot by design** — MiniMax M2.1's 7-language coding strength pairs with Qubrid's low-latency infrastructure for fast development loops
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                   |
+| 🎮 Playground   | [Try MiniMax M2.1 live](https://platform.qubrid.com/playground?model=MiniMaxAI%2FMiniMax-M2.1) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                       |
+| 🤗 Hugging Face | [MiniMaxAI/MiniMax-M2.1](https://huggingface.co/MiniMaxAI/MiniMax-M2.1)                        |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                             |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>
