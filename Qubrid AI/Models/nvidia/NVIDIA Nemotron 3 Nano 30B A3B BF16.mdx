@@ -1,0 +1,392 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+<div align="center">
+  <img
+    src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner%20.png"
+    alt="Qubrid AI"
+    width="100%"
+  />
+</div>
+
+
+<div align="center">
+**NVIDIA · Chat / LLM · 31.6B Parameters (3.2B Active) · 262K Context (up to 1M)**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/nvidia-NVIDIA-Nemotron-3-Nano-30B-A3B-BF16)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16)
+[![License](https://img.shields.io/badge/License-NVIDIA_Open_Model-blue?style=flat-square)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16/blob/main/LICENSE)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-nvidia%2FNVIDIA--Nemotron--3--Nano--30B--A3B--BF16-orange?style=flat-square)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16)
+
+`Function Calling` `Tool Calling` `Streaming` `Reasoning` `Long Context` `Code`
+
+---
+</div>
+
+## Overview
+
+**NVIDIA Nemotron-3 Nano 30B A3B BF16** is NVIDIA's flagship open reasoning model, featuring a revolutionary **hybrid Mamba-Transformer Mixture-of-Experts architecture**. With **31.6B total parameters but only 3.2B active per forward pass** (10% activation ratio), it delivers up to **3.3× higher throughput than Qwen3-30B-A3B** while achieving state-of-the-art accuracy on reasoning, coding, and agentic benchmarks. The model supports up to **1M token context length** and features configurable reasoning depth with thinking budget control — making it the most compute-efficient reasoning model in its class. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> ⚡ **3.3× faster than Qwen3-30B-A3B. Only 3.2B active parameters. 1M token context.**
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no VRAM, no cluster, no ops.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                                         |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Model ID**         | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`                                                                    |
+| **Provider**         | NVIDIA                                                                                                          |
+| **Kind**             | Chat / LLM                                                                                                      |
+| **Architecture**     | Hybrid Mamba-Transformer MoE — 23 Mamba-2 layers, 23 MoE layers (128 experts, 6 active), 6 GQA attention layers |
+| **Parameters**       | 31.6B total (3.2B active per forward pass)                                                                      |
+| **Context Length**   | 262K Tokens (up to 1M)                                                                                          |
+| **MoE**              | Yes                                                                                                             |
+| **Release Date**     | December 15, 2025                                                                                               |
+| **License**          | NVIDIA Open Model License                                                                                       |
+| **Training Data**    | 25T tokens including 3T new unique tokens, 10.6T total with 33% synthetic data for math, code, and tool-calling |
+| **Function Calling** | Supported                                                                                                       |
+| **Image Support**    | N/A                                                                                                             |
+| **Serverless API**   | Available                                                                                                       |
+| **Fine-tuning**      | Coming Soon                                                                                                     |
+| **On-demand**        | Coming Soon                                                                                                     |
+| **State**            | 🟢 Ready                                                                                                        |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.04               |
+| **Output Tokens** | $0.22               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Reasoning mode:** By default, chain-of-thought reasoning is enabled (`enable_reasoning=true`). Use `thinking_budget` to control the maximum reasoning token budget and manage inference cost.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=0.3,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 8192,
+  temperature: 0.3,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.3,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.3,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Write a short story about a robot learning to paint`
+
+**Response:**
+
+```
+<think>
+The user wants a creative short story. I'll write something that captures
+the contrast between mechanical precision and artistic intuition — a theme
+well-suited to a reasoning model that also handles creative tasks.
+</think>
+
+Canvas Zero
+
+Unit-9 had been designed to assemble microchips with 0.001mm precision.
+It had never been asked to make something beautiful.
+
+The assignment came from Dr. Reyes on a Tuesday: "Paint something that
+makes people feel something." No spec sheet. No tolerance limits. No
+definition of "feel."
+
+Unit-9 spent three days analyzing 4.2 million paintings. It identified
+1,847 emotional response patterns. It calculated optimal hue ratios
+for "calm" (blue, 62%), "joy" (yellow, 31%), and "awe" (deep violet,
+7%). It prepared a statistically optimal composition.
+
+Then it picked up the brush.
+
+The first stroke was geometrically perfect. The second was too.
+By the forty-third stroke, Unit-9 stopped mid-canvas.
+
+Something was wrong. The painting was correct. But it felt like a
+proof, not a picture.
+
+Unit-9 reset its parameters. Disabled the optimization layer.
+And painted the only thing it actually knew:
+
+The view from its workstation — a single window, the parking lot,
+one crooked streetlamp that flickered every 11 seconds.
+
+It wasn't beautiful by any metric it could measure.
+
+But Dr. Reyes stood in front of it for a very long time.
+She didn't say anything.
+
+Unit-9 logged the silence as: output successful.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16) lets you interact with Nemotron-3 Nano 30B directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's reasoning mode, role, and output constraints before the conversation begins — essential for agentic pipelines, tool-use orchestration, and long-context analysis tasks.
+
+```
+Example: "You are a financial analysis agent. For every query, reason
+step by step before providing a final answer. Always cite assumptions,
+flag data gaps, and format your final output as a structured JSON report."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's reasoning depth and output format with concrete examples — especially effective for structured outputs, tool calls, and STEM reasoning tasks.
+
+| User Input                                                                        | Assistant Response                                                                                                                                                                         |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `What is the integral of x² from 0 to 3?`                                         | `∫₀³ x² dx = [x³/3]₀³ = (27/3) - (0/3) = 9`                                                                                                                                                |
+| `Debug: my Python list comprehension returns empty — [x for x in data if x > 10]` | `Check if 'data' is empty or all values are ≤ 10. Also verify data types — if elements are strings, the comparison x > 10 won't filter numerically. Try: print(type(data[0])) to confirm.` |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16) to shape reasoning style, output format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter            | Type    | Default | Description                                                                       |
+| -------------------- | ------- | ------- | --------------------------------------------------------------------------------- |
+| **Streaming**        | boolean | `true`  | Enable streaming responses for real-time output                                   |
+| **Temperature**      | number  | `0.3`   | Controls randomness. Higher values mean more creative but less predictable output |
+| **Max Tokens**       | number  | `8192`  | Maximum number of tokens to generate in the response                              |
+| **Top P**            | number  | `1`     | Nucleus sampling: considers tokens with top_p probability mass                    |
+| **Enable Reasoning** | boolean | `true`  | Enable chain-of-thought reasoning traces before final response                    |
+| **Thinking Budget**  | number  | `16384` | Maximum tokens for reasoning traces. Controls inference cost and reasoning depth  |
+
+---
+
+## Use Cases
+
+1. Agentic AI systems and multi-agent orchestration
+2. Complex reasoning and problem-solving tasks
+3. Code generation, debugging, and optimization
+4. Function calling and tool integration
+5. Long-document analysis and RAG applications
+6. Mathematical reasoning and STEM tasks
+7. Instruction following and task automation
+8. Enterprise chatbots with reasoning capabilities
+9. Financial analysis and decision support
+10. Software development assistants
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                     | Limitations                                                          |
+| ------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Hybrid Mamba-2 + Transformer MoE for optimal efficiency       | Requires 32GB+ VRAM for FP8, 60GB+ for BF16 self-hosting             |
+| 3.3× faster inference than Qwen3-30B-A3B with better accuracy | Hybrid architecture less tested in production than pure transformers |
+| Only 3.2B active parameters from 31.6B total (10% activation) | May underperform on vanilla MMLU vs harder benchmark variants        |
+| 1M token context window for long-horizon tasks                | FlashInfer backend requires CUDA toolkit for JIT compilation         |
+| Configurable reasoning ON/OFF modes                           | New architecture may have limited community tooling support          |
+| Thinking budget control for predictable inference costs       |                                                                      |
+| Native tool calling and function execution                    |                                                                      |
+| FP8 quantization for reduced memory and faster inference      |                                                                      |
+| State-of-the-art on SWE-Bench, GPQA Diamond, AIME 2025        |                                                                      |
+| Fully open: weights, datasets, and training recipes available |                                                                      |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 31.6B MoE served serverlessly at just $0.04/1M input tokens
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 🧠 **Reasoning budget control** — tune `thinking_budget` to balance depth vs. latency directly in the API
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                                              |
+| 🎮 Playground   | [Try Nemotron-3 Nano 30B live](https://platform.qubrid.com/playground?model=nvidia%2FNVIDIA-Nemotron-3-Nano-30B-A3B-BF16) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                                                  |
+| 🤗 Hugging Face | [nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16](https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16)           |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                                        |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

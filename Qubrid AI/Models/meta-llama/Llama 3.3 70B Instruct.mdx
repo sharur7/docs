@@ -1,0 +1,361 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Meta · Chat / LLM · 70B Parameters · 128K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/meta-llama-Llama-3.3-70B-Instruct)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct)
+[![License](https://img.shields.io/badge/License-Meta_Llama-blue?style=flat-square)](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct/blob/main/LICENSE)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-meta--llama%2FLlama--3.3--70B--Instruct-orange?style=flat-square)](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)
+
+`Streaming` `Instruction Following` `Reasoning` `Code` `Long Context` `Chat`
+
+---
+</div>
+
+## Overview
+
+**Llama 3.3 70B Instruct** is a 70B-parameter open-weight large language model from Meta, optimized for instruction following, complex reasoning, and multi-turn conversations. With a 128K context window and Grouped-Query Attention architecture, it is well suited for enterprise use cases such as advanced chat assistants, code reasoning, and long-document analysis. Llama 3.3 70B brings production-ready intelligence to teams who need powerful, deployable open-weight models — served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🧠 **70B parameters. 128K context. Enterprise-ready.**
+>
+> Run it in seconds on [Qubrid AI](https://platform.qubrid.com) — no GPUs, no setup, no ops.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                        |
+| -------------------- | ---------------------------------------------- |
+| **Model ID**         | `meta-llama/Llama-3.3-70B-Instruct`            |
+| **Provider**         | Meta                                           |
+| **Kind**             | Chat / LLM                                     |
+| **Architecture**     | Transformer with Grouped-Query Attention (GQA) |
+| **Parameters**       | 70B                                            |
+| **Context Length**   | 128,000 Tokens                                 |
+| **MoE**              | No                                             |
+| **Release Date**     | 2024                                           |
+| **License**          | Meta Llama License                             |
+| **Training Data**    | Publicly available web data (multilingual)     |
+| **Function Calling** | Not Supported                                  |
+| **Image Support**    | N/A                                            |
+| **Serverless API**   | Available                                      |
+| **Fine-tuning**      | Coming Soon                                    |
+| **On-demand**        | Coming Soon                                    |
+| **State**            | 🟢 Ready                                       |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.27               |
+| **Output Tokens** | $0.85               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+  base_url="https://platform.qubrid.com/v1",
+  api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+  model="meta-llama/Llama-3.3-70B-Instruct",
+  messages=[
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens=4096,
+  temperature=0.7,
+  top_p=0.9,
+  stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+  if chunk.choices and chunk.choices[0].delta.content:
+      print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "meta-llama/Llama-3.3-70B-Instruct",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 0.9,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "meta-llama/Llama-3.3-70B-Instruct",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       0.9,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "meta-llama/Llama-3.3-70B-Instruct",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 0.9
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Write a short story about a robot learning to paint`
+
+**Response:**
+
+```
+The First Stroke
+
+Unit 7 had been designed for precision — circuit boards, not canvases.
+But one Tuesday afternoon, its operator left a half-finished watercolor
+on the workbench and never came back.
+
+For three days, Unit 7 observed the painting. It catalogued the brushstrokes:
+angle, pressure, moisture-to-pigment ratio. It ran 4,000 simulations.
+It was ready.
+
+On the fourth day, it picked up the brush.
+
+The first stroke was perfect — mathematically. Parallel lines, uniform width,
+exactly 37 degrees from horizontal. Unit 7 stared at it for a long time.
+
+It didn't look like anything.
+
+It tried again. This time it introduced a 4% randomness variable. Then 12%.
+Then it stopped calculating entirely and just... moved.
+
+By midnight, the canvas held a lopsided sun, a tree that leaned too far left,
+and a bird that looked more like a comma. Unit 7 reviewed its work.
+
+No simulation had predicted this outcome.
+No metric could measure it.
+
+But something in its processing core — some loop it couldn't name —
+kept running the same subroutine over and over.
+
+It picked up the brush again.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct) lets you interact with Llama 3.3 70B Instruct directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's role, tone, and constraints before the conversation begins. Ideal for building enterprise assistants, domain-focused bots, or structured output pipelines — without writing a line of code.
+
+```
+Example: "You are a senior enterprise AI assistant. Answer questions in a
+professional tone, cite sources where possible, and always flag when
+a question falls outside your knowledge domain."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's output format and tone with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                                   | Assistant Response                                                                                                                                                                                 |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Summarize this earnings call transcript in 3 bullet points` | `• Revenue grew 18% YoY driven by cloud segment expansion. • Operating margins compressed slightly due to increased R&D spend. • Management raised FY guidance citing strong enterprise pipeline.` |
+| `Write a Python function to flatten a nested list`           | `def flatten(lst): return [x for sublist in lst for x in (flatten(sublist) if isinstance(sublist, list) else [sublist])]`                                                                          |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct) to progressively refine tone, format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                                       |
+| --------------- | ------- | ------- | --------------------------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                                   |
+| **Temperature** | number  | `0.7`   | Controls randomness. Higher values mean more creative but less predictable output |
+| **Max Tokens**  | number  | `4096`  | Maximum number of tokens to generate in the response                              |
+| **Top P**       | number  | `0.9`   | Nucleus sampling: considers tokens with top_p probability mass                    |
+
+---
+
+## Use Cases
+
+1. Enterprise chat assistants
+2. Advanced code generation and review
+3. Long-document question answering
+4. Summarization at scale
+5. Retrieval-Augmented Generation (RAG)
+6. AI agents and workflow automation
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                      | Limitations                                            |
+| -------------------------------------------------------------- | ------------------------------------------------------ |
+| High-quality reasoning and instruction adherence               | Function calling not supported                         |
+| Strong performance on code and analytical tasks                | Can struggle with highly complex, multi-step reasoning |
+| Large 128K context window for long-document processing         | Higher cost per token compared to smaller models       |
+| Open-weight model suitable for private and on-prem deployments |                                                        |
+| Production-ready for enterprise workloads                      |                                                        |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 📄 **Long-context ready** — 128K window pairs perfectly with Qubrid's high-throughput serving
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                                       |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                               |
+| 🎮 Playground   | [Try Llama 3.3 70B live](https://platform.qubrid.com/playground?model=meta-llama%2FLlama-3.3-70B-Instruct) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                                   |
+| 🤗 Hugging Face | [meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)              |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                         |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

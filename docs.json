@@ -128,6 +128,79 @@
               "inferencing/Hugging Face"
             ]
           },
+            {
+              "group": "Qubrid AI Models",
+              "pages": [
+                {
+                  "group": "DeepSeek",
+                  "pages": [
+                    "Qubrid AI/Models/deepseek-ai/DeepSeek V3.2",
+                    "Qubrid AI/Models/deepseek-ai/DeepSeek R1 0528",
+                    "Qubrid AI/Models/deepseek-ai/DeepSeek R1 Distill Llama 70B"
+                  ]
+                },
+                {
+                  "group": "Qwen",
+                  "pages": [
+                    "Qubrid AI/Models/Qwen/Qwen3 Coder Plus",
+                    "Qubrid AI/Models/Qwen/Qwen3 Plus",
+                    "Qubrid AI/Models/Qwen/Qwen3 Max",
+                    "Qubrid AI/Models/Qwen/Qwen3 Next 80B A3B Thinking"
+                  ]
+                },
+                {
+                  "group": "OpenAI",
+                  "pages": [
+                    "Qubrid AI/Models/openai/GPT OSS 20B",
+                    "Qubrid AI/Models/openai/GPT OSS 120B"
+                  ]
+                },
+                {
+                  "group": "Meta Llama",
+                  "pages": [
+                    "Qubrid AI/Models/meta-llama/Llama 3.3 70B Instruct"
+                  ]
+                },
+                {
+                  "group": "MiniMax",
+                  "pages": [
+                    "Qubrid AI/Models/MiniMaxAI/MiniMax M2.1"
+                  ]
+                },
+                {
+                  "group": "Microsoft",
+                  "pages": [
+                    "Qubrid AI/Models/microsoft/Fara 7B"
+                  ]
+                },
+                {
+                  "group": "NVIDIA",
+                  "pages": [
+                    "Qubrid AI/Models/nvidia/NVIDIA Nemotron 3 Super 120B A12B FP8",
+                    "Qubrid AI/Models/nvidia/NVIDIA Nemotron 3 Nano 30B A3B BF16",
+                    "Qubrid AI/Models/nvidia/Orchestrator 8B"
+                  ]
+                },
+                {
+                  "group": "Moonshot AI",
+                  "pages": [
+                    "Qubrid AI/Models/moonshotai/Kimi K2 Thinking"
+                  ]
+                },
+                {
+                  "group": "Mistral",
+                  "pages": [
+                    "Qubrid AI/Models/mistralai/Mistral 7B Instruct v0.3"
+                  ]
+                },
+                {
+                  "group": "Zhipu AI",
+                  "pages": [
+                    "Qubrid AI/Models/zai-org/GLM 4.7 FP8"
+                  ]
+                }
+              ]
+            },
           {
             "group": "AI Tools",
             "pages": [

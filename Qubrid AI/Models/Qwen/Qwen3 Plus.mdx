@@ -1,0 +1,358 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Alibaba Cloud · Chat / LLM · Up to 1M Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/Qwen-Qwen3-Plus)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Qwen%2FQwen3--Plus-orange?style=flat-square)](https://huggingface.co/Qwen/Qwen3-Plus)
+
+`Streaming` `Multilingual` `Long Context` `Chat` `Instruction Following`
+
+---
+</div>
+
+## Overview
+
+**Qwen3 Plus** is Alibaba Cloud's balanced general-purpose model for everyday chat and analysis tasks — built for speed, reliability, and broad multilingual coverage. Developed by **Alibaba Cloud**, the cloud computing arm of Alibaba Group and creator of the Qwen model family, it is built on a Transformer decoder-only architecture with **up to 1M token context** and instruction tuning on multilingual web data. Whether you're building customer support bots, automating business writing, or running ideation workflows, Qwen3 Plus delivers fast, consistent responses across languages and tasks. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🌐 **Fast. Reliable. Multilingual. 1M token context.**
+>
+> Start building on [Qubrid AI](https://platform.qubrid.com) in minutes.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                       |
+| -------------------- | --------------------------------------------- |
+| **Model ID**         | `Qwen/Qwen3-Plus`                             |
+| **Provider**         | Alibaba Cloud (Qwen Team)                     |
+| **Kind**             | Chat / LLM                                    |
+| **Architecture**     | Transformer decoder-only                      |
+| **Parameters**       | N/A                                           |
+| **Context Length**   | Up to 1,000,000 Tokens                        |
+| **MoE**              | No                                            |
+| **Release Date**     | 2025                                          |
+| **License**          | Apache 2.0                                    |
+| **Training Data**    | Multilingual web data with instruction tuning |
+| **Function Calling** | Not Supported                                 |
+| **Image Support**    | N/A                                           |
+| **Serverless API**   | Available                                     |
+| **Fine-tuning**      | Coming Soon                                   |
+| **On-demand**        | Coming Soon                                   |
+| **State**            | 🟢 Ready                                      |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.40               |
+| **Output Tokens** | $1.20               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Plus",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=4096,
+    temperature=0.7,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "Qwen/Qwen3-Plus",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.7,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Plus",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.7,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Plus",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Summarize the key points of the latest climate change report`
+
+**Response:**
+
+```
+Key Points — Climate Change (Summary)
+
+1. Global temperatures are rising faster than projected
+   Average global surface temperature has increased by approximately 1.1°C
+   above pre-industrial levels. Without intervention, we are on track for
+   1.5°C by the early 2030s.
+
+2. Extreme weather events are intensifying
+   Heatwaves, droughts, floods, and wildfires are becoming more frequent
+   and severe. Vulnerable regions — particularly sub-Saharan Africa,
+   South Asia, and small island states — face disproportionate impacts.
+
+3. Sea levels are accelerating
+   Ice sheet loss from Greenland and Antarctica is accelerating. Sea level
+   rise threatens hundreds of millions of coastal residents by 2100.
+
+4. Emissions must peak before 2025 to limit warming to 1.5°C
+   Global greenhouse gas emissions need to fall 43% by 2030 (vs 2019 levels)
+   to stay on the 1.5°C pathway. Current commitments fall significantly short.
+
+5. Adaptation is now unavoidable
+   Even under optimistic scenarios, significant adaptation investment is
+   required for agriculture, water systems, infrastructure, and public health.
+
+6. Financing remains the critical gap
+   Developing nations require $1–1.3 trillion/year by 2030 in climate finance.
+   Current flows represent a fraction of that need.
+
+Bottom line: The window to avoid the worst outcomes is narrowing rapidly.
+Immediate, large-scale action on emissions reduction and adaptation financing
+is required across all sectors and geographies.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus) lets you interact with Qwen3 Plus directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Set the model's role, tone, and language preferences before the conversation begins — ideal for multilingual customer support bots, branded writing assistants, or scoped analysis tools.
+
+```
+Example: "You are a multilingual customer support agent for a global SaaS
+platform. Respond in the same language the user writes in. Be concise,
+friendly, and always offer a next step or resolution."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Show the model your preferred tone, format, and output style with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                                    | Assistant Response                                                                                                                                                                             |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Write a subject line for a product launch email`             | `Introducing [Product]: The smarter way to [key benefit] — available now`                                                                                                                      |
+| `Brainstorm 3 blog post ideas about remote work productivity` | `1. "The 5-Hour Workday: How Deep Work Beats Longer Hours" 2. "Remote Onboarding Done Right: What the Best Teams Do Differently" 3. "Async-First: Why Your Team Doesn't Need Another Meeting"` |
+
+> 💡 Add few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus) to lock in tone, format, and domain focus — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                                       |
+| --------------- | ------- | ------- | --------------------------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                                   |
+| **Temperature** | number  | `0.7`   | Controls randomness. Higher values mean more creative but less predictable output |
+| **Max Tokens**  | number  | `4096`  | Maximum number of tokens to generate in the response                              |
+| **Top P**       | number  | `1`     | Nucleus sampling: considers tokens with top_p probability mass                    |
+
+---
+
+## Use Cases
+
+1. Customer support chatbots that resolve common issues and FAQs across multiple languages
+2. Business and marketing writing such as emails, blog posts, social copy, and internal docs
+3. Brainstorming and ideation for product features, campaign concepts, and content outlines
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                           | Limitations                                       |
+| ------------------------------------------------------------------- | ------------------------------------------------- |
+| Fast, low-latency responses for everyday chat and analysis          | Not as strong as Qwen Max on hard reasoning tasks |
+| Strong multilingual support across diverse languages                | Function calling not supported                    |
+| Up to 1M token context for long conversations and documents         | Parameter count not publicly disclosed            |
+| Apache 2.0 license — fully open-source, unrestricted commercial use |                                                   |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 🌐 **Multilingual by design** — Qwen3 Plus's broad language coverage pairs perfectly with Qubrid's globally accessible API
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 💬 **Multi-language SDK support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                          |
+| 🎮 Playground   | [Try Qwen3 Plus live](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Plus) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                              |
+| 🤗 Hugging Face | [Qwen/Qwen3-Plus](https://huggingface.co/Qwen/Qwen3-Plus)                             |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                    |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

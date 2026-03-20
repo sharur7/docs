@@ -1,0 +1,596 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Alibaba Cloud · Code / LLM · Up to 1M Context · 386 tokens/s**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/Qwen-Qwen3-Coder-Plus)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Qwen%2FQwen3--Coder--Plus-orange?style=flat-square)](https://huggingface.co/Qwen/Qwen3-Coder-Plus)
+
+`Streaming` `Agentic Coding` `Tool Calling` `Long Context` `Code Generation` `Debugging`
+
+---
+</div>
+
+## Overview
+
+**Qwen3 Coder Plus** is a powerful Coding Agent built on Qwen3 by **Alibaba Cloud** — the cloud computing arm of Alibaba Group and creator of the Qwen model family. It excels in tool calling and environment interaction to achieve **autonomous end-to-end programming**, combining outstanding coding proficiency with versatile general-purpose abilities. With a Transformer decoder-only architecture, **up to 1M token context**, and a blazing **386 tokens/s** throughput, it is purpose-built for code generation, debugging, refactoring, and API design workflows. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> ⚡ **386 tokens/s. Up to 1M context. Autonomous coding agent.**
+>
+> Start building on [Qubrid AI](https://platform.qubrid.com) in minutes.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                       |
+| -------------------- | --------------------------------------------- |
+| **Model ID**         | `Qwen/Qwen3-Coder-Plus`                       |
+| **Provider**         | Alibaba Cloud (Qwen Team)                     |
+| **Kind**             | Code                                          |
+| **Architecture**     | Transformer decoder-only                      |
+| **Parameters**       | N/A                                           |
+| **Context Length**   | Up to 1,000,000 Tokens                        |
+| **MoE**              | No                                            |
+| **Throughput**       | 386 tokens/s                                  |
+| **Release Date**     | 2025                                          |
+| **License**          | Apache 2.0                                    |
+| **Training Data**    | Code-focused datasets with instruction tuning |
+| **Function Calling** | Not Supported                                 |
+| **Image Support**    | N/A                                           |
+| **Serverless API**   | Available                                     |
+| **Fine-tuning**      | Coming Soon                                   |
+| **On-demand**        | Coming Soon                                   |
+| **State**            | 🟢 Ready                                      |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.10               |
+| **Output Tokens** | $5.00               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Temperature note:** Default is `0.1` — low temperature is recommended for deterministic, production-ready code generation.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Coder-Plus",
+    messages=[
+      {
+        "role": "user",
+        "content": "Write a Python function to calculate fibonacci sequence"
+      }
+    ],
+    max_tokens=8962,
+    temperature=0.1,
+    top_p=1,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "Qwen/Qwen3-Coder-Plus",
+  messages: [
+    {
+      role: "user",
+      content: "Write a Python function to calculate fibonacci sequence",
+    },
+  ],
+  max_tokens: 8962,
+  temperature: 0.1,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Coder-Plus",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Write a Python function to calculate fibonacci sequence",
+			},
+		},
+		"temperature": 0.1,
+		"max_tokens":  8962,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Coder-Plus",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci sequence"
+    }
+  ],
+  "temperature": 0.1,
+  "max_tokens": 8962,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Create me a modern Dashboard with interactive working buttons including graphs in HTML`
+
+**Response:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      .topbar {
+        background: #1e293b;
+        padding: 16px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #334155;
+      }
+      .topbar h1 {
+        font-size: 1.4rem;
+        color: #a78bfa;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        padding: 24px 32px;
+      }
+      .card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #334155;
+      }
+      .card .label {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-bottom: 8px;
+      }
+      .card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #a78bfa;
+      }
+      .card .delta {
+        font-size: 0.8rem;
+        color: #34d399;
+        margin-top: 4px;
+      }
+      .charts {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+        padding: 0 32px 24px;
+      }
+      .chart-box {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #334155;
+      }
+      .chart-box h3 {
+        font-size: 0.95rem;
+        color: #94a3b8;
+        margin-bottom: 16px;
+      }
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        padding: 0 32px 24px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: opacity 0.2s;
+      }
+      .btn:hover {
+        opacity: 0.85;
+      }
+      .btn-primary {
+        background: #7c3aed;
+        color: white;
+      }
+      .btn-success {
+        background: #059669;
+        color: white;
+      }
+      .btn-danger {
+        background: #dc2626;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <h1>📊 Analytics Dashboard</h1>
+      <span style="color:#94a3b8; font-size:0.85rem"
+        >Last updated: just now</span
+      >
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="label">Total Revenue</div>
+        <div class="value" id="revenue">$84,200</div>
+        <div class="delta">↑ 12.4% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Active Users</div>
+        <div class="value" id="users">3,821</div>
+        <div class="delta">↑ 8.1% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Conversions</div>
+        <div class="value" id="conv">5.7%</div>
+        <div class="delta">↑ 0.3% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Avg Session</div>
+        <div class="value">4m 12s</div>
+        <div class="delta">↓ 0.5% vs last month</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="refreshData()">
+        🔄 Refresh Data
+      </button>
+      <button class="btn btn-success" onclick="exportCSV()">
+        ⬇ Export CSV
+      </button>
+      <button class="btn btn-danger" onclick="resetData()">✕ Reset</button>
+    </div>
+
+    <div class="charts">
+      <div class="chart-box">
+        <h3>Monthly Revenue</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Traffic Sources</h3>
+        <canvas id="doughnutChart"></canvas>
+      </div>
+    </div>
+
+    <script>
+      const lineCtx = document.getElementById("lineChart").getContext("2d");
+      const lineChart = new Chart(lineCtx, {
+        type: "line",
+        data: {
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          datasets: [
+            {
+              label: "Revenue ($)",
+              data: [
+                42000, 47000, 51000, 46000, 58000, 63000, 70000, 67000, 74000,
+                79000, 82000, 84200,
+              ],
+              borderColor: "#7c3aed",
+              backgroundColor: "rgba(124,58,237,0.1)",
+              tension: 0.4,
+              fill: true,
+              pointRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: "#94a3b8" } } },
+          scales: {
+            x: { ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" } },
+            y: { ticks: { color: "#94a3b8" }, grid: { color: "#334155" } },
+          },
+        },
+      });
+
+      const dCtx = document.getElementById("doughnutChart").getContext("2d");
+      new Chart(dCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Organic", "Paid", "Referral", "Social"],
+          datasets: [
+            {
+              data: [42, 28, 18, 12],
+              backgroundColor: ["#7c3aed", "#06b6d4", "#10b981", "#f59e0b"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: "#94a3b8" } } },
+        },
+      });
+
+      function refreshData() {
+        const newVal = (80000 + Math.random() * 10000).toFixed(0);
+        document.getElementById("revenue").textContent =
+          "$" + parseInt(newVal).toLocaleString();
+        document.getElementById("users").textContent = (
+          3500 + Math.floor(Math.random() * 500)
+        ).toLocaleString();
+        lineChart.data.datasets[0].data = lineChart.data.datasets[0].data.map(
+          (v) => Math.max(40000, v + (Math.random() - 0.5) * 4000),
+        );
+        lineChart.update();
+      }
+
+      function exportCSV() {
+        const csv =
+          "Month,Revenue\n" +
+          [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ]
+            .map((m, i) => `${m},${lineChart.data.datasets[0].data[i]}`)
+            .join("\n");
+        const a = document.createElement("a");
+        a.href = "data:text/csv," + encodeURIComponent(csv);
+        a.download = "dashboard.csv";
+        a.click();
+      }
+
+      function resetData() {
+        document.getElementById("revenue").textContent = "$84,200";
+        document.getElementById("users").textContent = "3,821";
+      }
+    </script>
+  </body>
+</html>
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus) lets you interact with Qwen3 Coder Plus directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's coding language, style conventions, and output format before the conversation begins — essential for consistent autonomous coding sessions.
+
+```
+Example: "You are a senior full-stack engineer. Always write production-ready
+code with proper error handling, type annotations, and inline comments.
+Prefer functional patterns and include usage examples at the end."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Establish your preferred code style and output format with concrete examples — no fine-tuning required.
+
+| User Input                                      | Assistant Response                                                                                                                                                                                                                                           |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Implement binary search tree in Go`            | `type Node struct { Val int; Left, Right *Node }; func insert(root *Node, val int) *Node { if root == nil { return &Node{Val: val} }; if val < root.Val { root.Left = insert(root.Left, val) } else { root.Right = insert(root.Right, val) }; return root }` |
+| `Explain async/await vs Promises in JavaScript` | `Promises use .then()/.catch() chains. async/await is syntactic sugar over Promises — it makes async code read like sync code. Both resolve to the same microtask queue behavior; async/await is preferred for readability in modern codebases.`             |
+
+> 💡 Add few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus) to lock in code style, language preference, and output format — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                              |
+| --------------- | ------- | ------- | -------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output          |
+| **Temperature** | number  | `0.1`   | Lower temperature for more deterministic code generation |
+| **Max Tokens**  | number  | `8962`  | Maximum number of tokens the model can generate          |
+| **Top P**       | number  | `1`     | Controls nucleus sampling for more predictable output    |
+
+---
+
+## Use Cases
+
+1. Code generation
+2. Debugging
+3. Refactoring
+4. API design
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                            | Limitations                                             |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| Very strong coding ability across multiple languages | Less creative for storytelling or open-ended generation |
+| Good long-context handling — up to 1M tokens         | Function calling not supported via API                  |
+| Autonomous coding agent with tool calling capability | Parameter count not publicly disclosed                  |
+| 386 tokens/s throughput for fast code generation     |                                                         |
+| Apache 2.0 — fully open-source with commercial use   |                                                         |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- ⚡ **386 tokens/s** — Qwen3 Coder Plus's high throughput is fully realized on Qubrid's low-latency infrastructure
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                      |
+| 🎮 Playground   | [Try Qwen3 Coder Plus live](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Coder-Plus) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                          |
+| 🤗 Hugging Face | [Qwen/Qwen3-Coder-Plus](https://huggingface.co/Qwen/Qwen3-Coder-Plus)                             |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

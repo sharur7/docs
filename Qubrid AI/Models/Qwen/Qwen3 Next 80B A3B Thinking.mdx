@@ -1,0 +1,370 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**Alibaba Cloud · Chat / LLM · 80B Parameters (3.9B Active) · 256K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/Qwen-Qwen3-Next-80B-A3B-Thinking)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Qwen%2FQwen3--Next--80B--A3B--Thinking-orange?style=flat-square)](https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking)
+
+`Streaming` `Reasoning` `Chain-of-Thought` `Long Context` `Code` `Agentic Planning`
+
+---
+</div>
+
+## Overview
+
+**Qwen3 Next 80B A3B Thinking** is a next-generation foundation model from Alibaba's Qwen team featuring a revolutionary **Hybrid Attention mechanism** (Gated DeltaNet + Gated Attention) with High-Sparsity MoE architecture. With **80B total parameters and only 3.9B active per token**, it delivers **10x higher throughput than Qwen3-32B** on long contexts while outperforming Gemini-2.5-Flash-Thinking on multiple benchmarks. Designed exclusively for deep reasoning tasks, it operates in thinking-only mode — surfacing full chain-of-thought traces before every response. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🧠 **10x throughput vs Qwen3-32B. Outperforms Gemini-2.5-Flash-Thinking. 3.9B active parameters.**
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no infrastructure required.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Model ID**         | `Qwen/Qwen3-Next-80B-A3B-Thinking`                                                                                  |
+| **Provider**         | Alibaba Cloud (Qwen Team)                                                                                           |
+| **Kind**             | Chat / LLM                                                                                                          |
+| **Architecture**     | Hybrid Transformer-Mamba (Gated DeltaNet + Gated Attention) with High-Sparsity MoE and Multi-Token Prediction (MTP) |
+| **Parameters**       | 80B total (3.9B active per token)                                                                                   |
+| **Context Length**   | 256,000 Tokens                                                                                                      |
+| **MoE**              | No                                                                                                                  |
+| **Release Date**     | September 2025                                                                                                      |
+| **License**          | Apache 2.0                                                                                                          |
+| **Training Data**    | Large-scale multilingual pretraining dataset, fine-tuned with GSPO for thinking                                     |
+| **Function Calling** | Not Supported                                                                                                       |
+| **Image Support**    | N/A                                                                                                                 |
+| **Serverless API**   | Available                                                                                                           |
+| **Fine-tuning**      | Coming Soon                                                                                                         |
+| **On-demand**        | Coming Soon                                                                                                         |
+| **State**            | 🟢 Ready                                                                                                            |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.20               |
+| **Output Tokens** | $1.80               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Thinking mode:** This model always produces chain-of-thought reasoning traces before its final answer. Plan for higher output token counts on complex tasks — use `max_tokens` accordingly.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+    base_url="https://platform.qubrid.com/v1",
+    api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+    model="Qwen/Qwen3-Next-80B-A3B-Thinking",
+    messages=[
+      {
+        "role": "user",
+        "content": "Explain quantum computing in simple terms"
+      }
+    ],
+    max_tokens=8192,
+    temperature=0.6,
+    top_p=0.95,
+    stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "Qwen/Qwen3-Next-80B-A3B-Thinking",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 8192,
+  temperature: 0.6,
+  top_p: 0.95,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.6,
+		"max_tokens":  8192,
+		"stream":      true,
+		"top_p":       0.95,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.6,
+  "max_tokens": 8192,
+  "stream": true,
+  "top_p": 0.95
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `Prove that the square root of 2 is irrational`
+
+**Response:**
+
+```
+<think>
+This is a classic proof by contradiction. I'll use the standard approach:
+assume √2 is rational, express it as a fraction in lowest terms, and
+derive a contradiction by showing both numerator and denominator must
+be even — contradicting the assumption that the fraction is in lowest terms.
+</think>
+
+Proof: √2 is irrational
+
+Assume for contradiction that √2 is rational.
+Then √2 = p/q where p, q are integers with no common factors (lowest terms).
+
+Step 1: Square both sides
+  2 = p²/q²
+  → p² = 2q²
+
+Step 2: p² is even, therefore p is even
+  Since p² = 2q², p² is divisible by 2.
+  If p² is even, then p must be even (odd × odd = odd, so odd² is always odd).
+  Let p = 2k for some integer k.
+
+Step 3: Substitute back
+  (2k)² = 2q²
+  4k²   = 2q²
+  q²    = 2k²
+
+Step 4: q² is even, therefore q is even
+  By the same logic as Step 2, q must also be even.
+
+Step 5: Contradiction
+  Both p and q are even — meaning they share a common factor of 2.
+  This contradicts our assumption that p/q is in lowest terms.
+
+Conclusion:
+  Our assumption that √2 is rational leads to a contradiction.
+  Therefore √2 is irrational. ∎
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking) lets you interact with Qwen3 Next 80B Thinking directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the model's reasoning approach, domain focus, and output format before the conversation begins. Particularly powerful for mathematical proofs, agentic planning, and structured analytical tasks.
+
+```
+Example: "You are an expert mathematical reasoning assistant. Work through
+every problem step by step, state all assumptions explicitly, and present
+your final answer in a clearly marked conclusion block."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Guide the model's reasoning style and output structure with concrete examples — no fine-tuning, no retraining required.
+
+| User Input                                                     | Assistant Response                                                                                                                                     |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Is 97 a prime number?`                                        | `Yes. 97 is prime. Check divisibility by all primes ≤ √97 ≈ 9.8: not divisible by 2, 3, 5, or 7. Therefore 97 has no factors other than 1 and itself.` |
+| `Write a Python function to check if a string is a palindrome` | `def is_palindrome(s: str) -> bool: s = s.lower().replace(" ", "") return s == s[::-1]`                                                                |
+
+> 💡 Stack multiple few-shot examples in the [Qubrid Playground](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking) to establish your preferred reasoning format and output structure — no fine-tuning required.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                       |
+| --------------- | ------- | ------- | ----------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                   |
+| **Temperature** | number  | `0.6`   | Controls randomness. Lower values recommended for reasoning tasks |
+| **Max Tokens**  | number  | `8192`  | Maximum number of tokens to generate                              |
+| **Top P**       | number  | `0.95`  | Nucleus sampling parameter                                        |
+
+---
+
+## Use Cases
+
+1. Complex multi-step reasoning
+2. Mathematical proofs
+3. Code synthesis
+4. Logical analysis
+5. Agentic planning
+6. Long-context document analysis
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                                                 | Limitations                                              |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Hybrid Attention (Gated DeltaNet + Gated Attention) for efficient long-context processing | Thinking mode only — no fast non-thinking mode available |
+| 10x throughput vs Qwen3-32B on 32K+ contexts                                              | Longer thinking traces increase latency on complex tasks |
+| Only 3.9B active parameters from 80B total (efficient inference)                          | New architecture with limited community tooling support  |
+| Native 256K context window                                                                | Function calling not supported                           |
+| Outperforms Gemini-2.5-Flash-Thinking on multiple benchmarks                              |                                                          |
+| Apache 2.0 — fully open-source with commercial use                                        |                                                          |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — 80B MoE served serverlessly, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 🧠 **Reasoning at scale** — Qwen3 Next's 10x throughput advantage is fully realized on Qubrid's low-latency infrastructure
+- 🧪 **Built-in Playground** — prototype with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                                        |
+| 🎮 Playground   | [Try Qwen3 Next 80B Thinking live](https://platform.qubrid.com/playground?model=Qwen%2FQwen3-Next-80B-A3B-Thinking) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                                            |
+| 🤗 Hugging Face | [Qwen/Qwen3-Next-80B-A3B-Thinking](https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking)                         |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                                  |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>

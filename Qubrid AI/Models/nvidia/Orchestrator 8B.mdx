@@ -1,0 +1,367 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/aryadoshii/qubrid-models/main/assets/qubrid_banner.png" alt="Qubrid AI" width="100%" />
+</div>
+
+
+<div align="center">
+**NVIDIA · Chat / LLM · 7B Parameters · 16K Context**
+
+[![Qubrid](https://img.shields.io/badge/Qubrid-Platform-5D29F0?style=flat-square)](https://platform.qubrid.com/model/nvidia-Orchestrator-8B)
+[![Playground](https://img.shields.io/badge/Try_in-Playground-AE6DFF?style=flat-square)](https://platform.qubrid.com/playground?model=nvidia%2FOrchestrator-8B)
+[![License](https://img.shields.io/badge/License-NVIDIA_Open_Model-blue?style=flat-square)](https://huggingface.co/nvidia/Orchestrator-8B/blob/main/LICENSE)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-nvidia%2FOrchestrator--8B-orange?style=flat-square)](https://huggingface.co/nvidia/Orchestrator-8B)
+
+`Streaming` `Reasoning` `Agent Workflows` `Tool Orchestration` `Structured Output`
+
+---
+</div>
+
+## Overview
+
+**NVIDIA Orchestrator 8B** is purpose-built for agent workflows and complex task sequencing. Unlike general-purpose LLMs, it excels specifically in planning, structured reasoning, autonomous execution, and coordinating multiple tools or APIs. Trained on orchestration datasets, workflow sequences, and enterprise task simulations — and enhanced with TensorRT-LLM optimization — it delivers superior throughput and low latency in enterprise automation scenarios. Served instantly via the [Qubrid AI Serverless API](https://platform.qubrid.com).
+
+> 🤖 **Built for agents, not chat.** Plan, sequence, orchestrate — at scale.
+>
+> Deploy on [Qubrid AI](https://platform.qubrid.com) — no GPU setup, no infrastructure overhead.
+
+---
+
+## Model Specifications
+
+| Field                | Details                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| **Model ID**         | `nvidia/Orchestrator-8B`                                                                   |
+| **Provider**         | NVIDIA                                                                                     |
+| **Kind**             | Chat / LLM                                                                                 |
+| **Architecture**     | Optimized Transformer (TensorRT-LLM enhanced)                                              |
+| **Parameters**       | 7B                                                                                         |
+| **Context Length**   | 16,384 Tokens                                                                              |
+| **MoE**              | No                                                                                         |
+| **Release Date**     | 2025                                                                                       |
+| **License**          | NVIDIA Open Model License                                                                  |
+| **Training Data**    | Orchestration datasets, workflow sequences, tool-use datasets, enterprise task simulations |
+| **Function Calling** | Not Supported                                                                              |
+| **Image Support**    | N/A                                                                                        |
+| **Serverless API**   | Available                                                                                  |
+| **Fine-tuning**      | Coming Soon                                                                                |
+| **On-demand**        | Coming Soon                                                                                |
+| **State**            | 🟢 Ready                                                                                   |
+
+---
+
+## Pricing
+
+> 💳 Access via the [Qubrid AI Serverless API](https://platform.qubrid.com) with pay-per-token pricing. No infrastructure management required.
+
+| Token Type        | Price per 1M Tokens |
+| ----------------- | ------------------- |
+| **Input Tokens**  | $0.21               |
+| **Output Tokens** | $0.25               |
+
+---
+
+## Quickstart
+
+### Prerequisites
+
+1. Create a free account at [platform.qubrid.com](https://platform.qubrid.com)
+2. Generate your API key from the [API Keys](https://platform.qubrid.com/api-keys) section
+3. Replace `QUBRID_API_KEY` in the code below with your actual key
+
+> 💡 **Temperature note:** Lower values (`0.4` default) are recommended for deterministic task execution and structured outputs. Avoid high temperature values for agentic workloads.
+
+---
+
+### Python
+
+```python
+from openai import OpenAI
+
+# Initialize the OpenAI client with Qubrid base URL
+client = OpenAI(
+  base_url="https://platform.qubrid.com/v1",
+  api_key="QUBRID_API_KEY",
+)
+
+# Create a streaming chat completion
+stream = client.chat.completions.create(
+  model="nvidia/Orchestrator-8B",
+  messages=[
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  max_tokens=4096,
+  temperature=0.4,
+  top_p=1,
+  stream=True
+)
+
+# If stream = False comment this out
+for chunk in stream:
+  if chunk.choices and chunk.choices[0].delta.content:
+      print(chunk.choices[0].delta.content, end="", flush=True)
+print("\n")
+
+# If stream = True comment this out
+print(stream.choices[0].message.content)
+```
+
+---
+
+### JavaScript
+
+```javascript
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Qubrid base URL
+const client = new OpenAI({
+  baseURL: "https://platform.qubrid.com/v1",
+  apiKey: "QUBRID_API_KEY",
+});
+
+// Create a streaming chat completion
+const stream = await client.chat.completions.create({
+  model: "nvidia/Orchestrator-8B",
+  messages: [
+    {
+      role: "user",
+      content: "Explain quantum computing in simple terms",
+    },
+  ],
+  max_tokens: 4096,
+  temperature: 0.4,
+  top_p: 1,
+  stream: true,
+});
+
+// If stream = false comment this out
+for await (const chunk of stream) {
+  if (chunk.choices[0]?.delta?.content) {
+    process.stdout.write(chunk.choices[0].delta.content);
+  }
+}
+console.log("\n");
+
+// If stream = true comment this out
+console.log(stream.choices[0].message.content);
+```
+
+---
+
+### Go
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	url := "https://platform.qubrid.com/v1/chat/completions"
+
+	data := map[string]interface{}{
+		"model": "nvidia/Orchestrator-8B",
+		"messages": []map[string]string{
+			{
+				"role":    "user",
+				"content": "Explain quantum computing in simple terms",
+			},
+		},
+		"temperature": 0.4,
+		"max_tokens":  4096,
+		"stream":      true,
+		"top_p":       1,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer QUBRID_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, _ := client.Do(req)
+	defer res.Body.Close()
+
+	scanner := bufio.NewScanner(res.Body)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line != "" {
+			fmt.Println(line)
+		}
+	}
+}
+```
+
+---
+
+### cURL
+
+```bash
+curl -X POST "https://platform.qubrid.com/v1/chat/completions" \
+  -H "Authorization: Bearer QUBRID_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "nvidia/Orchestrator-8B",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain quantum computing in simple terms"
+    }
+  ],
+  "temperature": 0.4,
+  "max_tokens": 4096,
+  "stream": true,
+  "top_p": 1
+}'
+```
+
+---
+
+## Live Example
+
+> **Prompt:** `You are an enterprise automation agent. A user wants to file an IT support ticket, check its status, and escalate if unresolved after 48 hours. Plan the steps.`
+
+**Response:**
+
+```
+Task: IT Support Ticket Automation Workflow
+Agent: Orchestrator-8B
+
+Step 1 — Create Support Ticket
+  Tool: ticketing_api.create()
+  Inputs: { user_id, issue_description, priority: "medium", timestamp: now() }
+  Output: ticket_id, created_at
+
+Step 2 — Confirm Ticket Receipt
+  Tool: notification_api.send()
+  Inputs: { user_id, message: "Ticket #{ticket_id} created. Tracking started." }
+  Output: delivery_status
+
+Step 3 — Poll Ticket Status (every 12 hours)
+  Tool: ticketing_api.get_status(ticket_id)
+  Condition: IF status == "resolved" → END workflow
+             IF status == "open" AND age > 48h → GOTO Step 4
+             ELSE → wait 12h and re-poll
+
+Step 4 — Escalate Ticket
+  Tool: ticketing_api.escalate(ticket_id)
+  Inputs: { reason: "Unresolved after 48h", escalation_level: "L2" }
+  Output: escalation_id, assigned_agent
+
+Step 5 — Notify User of Escalation
+  Tool: notification_api.send()
+  Inputs: { user_id, message: "Your ticket has been escalated to L2 support.
+            Expected resolution: 24h. Escalation ID: #{escalation_id}" }
+
+Step 6 — Log Workflow Completion
+  Tool: audit_logger.record()
+  Inputs: { ticket_id, escalation_id, timestamps, resolution_status }
+
+Workflow complete. All steps are idempotent and safe to retry on failure.
+```
+
+_Try it yourself in the [Qubrid AI Playground →](https://platform.qubrid.com/playground?model=nvidia%2FOrchestrator-8B)_
+
+---
+
+## Playground Features
+
+The [Qubrid AI Playground](https://platform.qubrid.com/playground?model=nvidia%2FOrchestrator-8B) lets you interact with NVIDIA Orchestrator 8B directly in your browser — no setup, no code, no cost to explore.
+
+### 🧠 System Prompt
+
+Define the agent's role, available tools, and execution constraints before the conversation begins. This is where Orchestrator 8B truly shines — a well-crafted system prompt turns it into a fully scoped automation agent.
+
+```
+Example: "You are a DevOps automation agent with access to the following tools:
+deploy_service(), rollback_version(), check_health(), send_alert().
+Always validate service health before and after any deployment action.
+Output all decisions as structured JSON."
+```
+
+> Set your system prompt once in the [Qubrid Playground](https://platform.qubrid.com/playground?model=nvidia%2FOrchestrator-8B) and it applies across every turn of the conversation.
+
+---
+
+### 🎯 Few-Shot Examples
+
+Prime the model with example task sequences to establish your expected planning format and tool-calling style — no fine-tuning, no retraining required.
+
+| User Input                                                         | Assistant Response                                                                                                                                       |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Extract all invoice totals from this JSON and return a sum`       | `Step 1: Parse JSON → extract all "total" fields. Step 2: Sum values. Step 3: Return { "invoice_count": N, "total_sum": X, "currency": "USD" }`          |
+| `Check if an API endpoint is healthy and retry 3 times on failure` | `Step 1: GET /health → IF 200 return OK. Step 2: ON failure wait 2s → retry. Step 3: After 3 failures → alert_ops() and return { "status": "degraded" }` |
+
+> 💡 Few-shot examples are especially powerful for Orchestrator 8B — they establish the planning grammar and output schema the model should follow across all subsequent tasks.
+
+---
+
+## Inference Parameters
+
+| Parameter       | Type    | Default | Description                                                                                   |
+| --------------- | ------- | ------- | --------------------------------------------------------------------------------------------- |
+| **Streaming**   | boolean | `true`  | Enable streaming responses for real-time output                                               |
+| **Temperature** | number  | `0.4`   | Controls creativity and randomness. Lower values recommended for deterministic task execution |
+| **Max Tokens**  | number  | `4096`  | Maximum number of tokens the model can generate                                               |
+| **Top P**       | number  | `1`     | Controls nucleus sampling for more predictable output                                         |
+
+---
+
+## Use Cases
+
+1. AI agents for enterprise automation
+2. Tool and API orchestration
+3. RAG and workflow pipelines
+4. Long-context reasoning
+5. DevOps automation and observability agents
+6. Data extraction and structured decision making
+
+---
+
+## Strengths & Limitations
+
+| Strengths                                                               | Limitations                                                                 |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Highly optimized for NVIDIA GPU inference                               | Requires GPU acceleration for optimal performance                           |
+| Superior multi-step reasoning and tool orchestration                    | Not intended for creative writing or open-ended generation                  |
+| Supports structured outputs for automation pipelines                    | Performance depends on system-level optimization (TensorRT-LLM recommended) |
+| Ideal for building agents that interact with APIs, databases, and tools | Function calling not supported via API                                      |
+
+---
+
+## Why Qubrid AI?
+
+- 🚀 **No infrastructure setup** — serverless API, pay only for what you use
+- 🔁 **OpenAI-compatible** — drop-in replacement using the same SDK, just swap the base URL
+- 🤖 **Agent-ready infrastructure** — Orchestrator 8B's structured output strength pairs perfectly with Qubrid's low-latency serving
+- 🧪 **Built-in Playground** — prototype agent workflows with system prompts and few-shot examples instantly at [platform.qubrid.com](https://platform.qubrid.com)
+- 📊 **Full observability** — API logs and usage tracking built into the [Qubrid dashboard](https://platform.qubrid.com)
+- 🌐 **Multi-language support** — Python, JavaScript, Go, cURL out of the box
+
+---
+
+## Resources
+
+| Resource        | Link                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| 📖 Qubrid Docs  | [docs.platform.qubrid.com](https://docs.platform.qubrid.com)                                      |
+| 🎮 Playground   | [Try Orchestrator 8B live](https://platform.qubrid.com/playground?model=nvidia%2FOrchestrator-8B) |
+| 🔑 API Keys     | [Get your API Key](https://platform.qubrid.com/api-keys)                                          |
+| 🤗 Hugging Face | [nvidia/Orchestrator-8B](https://huggingface.co/nvidia/Orchestrator-8B)                           |
+| 💬 Discord      | [Join the Qubrid Community](https://discord.com/invite/Btsqxa6ZnQ)                                |
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Qubrid AI](https://platform.qubrid.com)**<br /><br />
+_Frontier models. Serverless infrastructure. Zero friction._
+
+</div>
