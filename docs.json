@@ -1,11 +1,14 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "willow",
+  "theme": "maple",
   "name": "Qubrid Documentation",
+  "fonts": {
+    "family": "Inter"
+  },
   "colors": {
     "primary": "#5D29F0",
-    "light": "#AE6DFF",
-    "dark": "#AE6DFF"
+    "light": "#523cb5",
+    "dark": "#523cb5"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -285,4 +288,5 @@
   "headers": {
     "Content-Security-Policy": "default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.livechatinc.com; connect-src * https://api.livechatinc.com https://cdn.livechatinc.com; img-src * data: blob:; style-src * 'unsafe-inline';"
   }
+  
 }
