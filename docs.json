@@ -211,12 +211,13 @@
         ]
       },
       {
-        "tab": "API References",
+        "tab": "Changelog",
         "groups": [
           {
-            "group": "Qubrid APIs",
+            "group": "Changelog",
             "pages": [
-              "api-reference/Overview"
+              "Platform Updates",
+              "Model Updates"
             ]
           }
         ]
@@ -231,7 +232,7 @@
         },
         {
           "anchor": "Blogs",
-          "href": "https://docs.platform.qubrid.com/blog/",
+          "href": "https://qubrid.com/blog-news",
           "icon": "newspaper"
         }
       ]
