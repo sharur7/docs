@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Qubrid Vision API",
+    "title": "Qubrid OCR API",
     "version": "1.0.0",
-    "description": "Analyze and understand images using multimodal vision-language models through the OpenAI-compatible chat completions API."
+    "description": "Extract and recognize text from images using OCR-specialized vision models through the OpenAI-compatible chat completions API."
   },
   "servers": [
     {
@@ -19,18 +19,18 @@
       }
     },
     "schemas": {
-      "VisionRequest": {
+      "OCRRequest": {
         "type": "object",
         "required": ["model", "messages"],
         "properties": {
           "model": {
             "type": "string",
-            "example": "Qwen/Qwen3-VL-Plus",
-            "description": "The multimodal vision-language model to use."
+            "example": "Hunyuan/Hunyuan-OCR-1B",
+            "description": "The OCR-specialized vision model to use for text extraction."
           },
           "messages": {
             "type": "array",
-            "description": "Chat-style input containing text instructions and image content.",
+            "description": "Chat-style input containing text instructions and image content for OCR processing.",
             "items": {
               "type": "object",
               "properties": {
@@ -49,15 +49,15 @@
                       },
                       "text": {
                         "type": "string",
-                        "example": "What is in this image? Describe the main elements."
+                        "example": "Extract all text from this image and preserve the layout structure."
                       },
                       "image_url": {
                         "type": "object",
                         "properties": {
                           "url": {
                             "type": "string",
-                            "example": "https://example.com/sample-image.jpg",
-                            "description": "Publicly accessible image URL for visual analysis."
+                            "example": "https://example.com/document.png",
+                            "description": "Publicly accessible image URL containing text to extract."
                           }
                         }
                       }
@@ -69,33 +69,33 @@
           },
           "max_tokens": {
             "type": "integer",
-            "default": 16384,
-            "description": "Maximum number of tokens to generate in the response."
+            "default": 8192,
+            "description": "Maximum number of tokens to generate in the OCR response."
           },
           "temperature": {
             "type": "number",
             "default": 0.1,
-            "description": "Sampling temperature controlling response variability."
+            "description": "Sampling temperature for text extraction (lower = more deterministic)."
           },
           "top_p": {
             "type": "number",
             "default": 1,
-            "description": "Nucleus sampling parameter."
+            "description": "Nucleus sampling parameter for OCR output."
           },
           "stream": {
             "type": "boolean",
-            "default": true,
-            "description": "Whether to stream output incrementally."
+            "default": false,
+            "description": "Whether to stream OCR output incrementally."
           }
         }
       },
-      "VisionResponse": {
+      "OCRResponse": {
         "type": "object",
-        "description": "Standard OpenAI-compatible chat completion response or streamed chunks.",
+        "description": "Standard OpenAI-compatible chat completion response with extracted text.",
         "properties": {
           "id": {
             "type": "string",
-            "example": "chatcmpl-abc123"
+            "example": "chatcmpl-ocr-123456"
           },
           "object": {
             "type": "string",
@@ -107,7 +107,7 @@
           },
           "model": {
             "type": "string",
-            "example": "Qwen/Qwen3-VL-Plus"
+            "example": "Hunyuan/Hunyuan-OCR-1B"
           },
           "choices": {
             "type": "array",
@@ -127,7 +127,7 @@
                     },
                     "content": {
                       "type": "string",
-                      "example": "The image shows the Statue of Liberty standing on Liberty Island in New York Harbor."
+                      "example": "Header: Important Document\n\nSection 1: Introduction\nThis document contains important information...\n\nSection 2: Details\nKey points and data extracted from the image..."
                     }
                   }
                 },
@@ -163,10 +163,10 @@
   "paths": {
     "/chat/completions": {
       "post": {
-        "summary": "Analyze Images with Vision Models",
-        "description": "Use a multimodal vision-language model to understand and describe images via the OpenAI-compatible chat completions API.",
-        "operationId": "createVisionCompletion",
-        "tags": ["Vision"],
+        "summary": "Extract Text from Images with OCR",
+        "description": "Use specialized OCR vision models to extract and recognize text from images via the OpenAI-compatible chat completions API.",
+        "operationId": "createOCRCompletion",
+        "tags": ["OCR"],
         "security": [
           {
             "BearerAuth": []
@@ -177,34 +177,60 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VisionRequest"
+                "$ref": "#/components/schemas/OCRRequest"
               },
               "examples": {
-                "Basic Vision": {
-                  "summary": "Analyze an image with a text prompt",
+                "Basic OCR": {
+                  "summary": "Extract text from a document image",
                   "value": {
-                    "model": "Qwen/Qwen3-VL-Plus",
+                    "model": "Hunyuan/Hunyuan-OCR-1B",
                     "messages": [
                       {
                         "role": "user",
                         "content": [
                           {
                             "type": "text",
-                            "text": "What is in this image? Describe the main elements."
+                            "text": "Extract all text from this image and preserve the layout structure."
                           },
                           {
                             "type": "image_url",
                             "image_url": {
-                              "url": "https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
+                              "url": "https://example.com/document.png"
                             }
                           }
                         ]
                       }
                     ],
-                    "max_tokens": 16384,
+                    "max_tokens": 8192,
                     "temperature": 0.1,
                     "top_p": 1,
-                    "stream": true
+                    "stream": false
+                  }
+                },
+                "OCR with Layout": {
+                  "summary": "Extract text preserving document layout and structure",
+                  "value": {
+                    "model": "Hunyuan/Hunyuan-OCR-1B",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Extract all text from this document image while preserving the original layout, structure, and formatting."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/form.jpg"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "max_tokens": 8192,
+                    "temperature": 0.05,
+                    "stream": false
                   }
                 }
               }
@@ -213,23 +239,23 @@
         },
         "responses": {
           "200": {
-            "description": "Vision analysis completed successfully",
+            "description": "OCR text extraction completed successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VisionResponse"
+                  "$ref": "#/components/schemas/OCRResponse"
                 },
                 "example": {
-                  "id": "chatcmpl-abc123",
+                  "id": "chatcmpl-ocr-123456",
                   "object": "chat.completion",
                   "created": 1710000000,
-                  "model": "Qwen/Qwen3-VL-Plus",
+                  "model": "Hunyuan/Hunyuan-OCR-1B",
                   "choices": [
                     {
                       "index": 0,
                       "message": {
                         "role": "assistant",
-                        "content": "The image shows the Statue of Liberty standing on Liberty Island in New York Harbor, with water and city skyline elements visible in the background."
+                        "content": "INVOICE #2024-001\nDate: March 30, 2024\n\nBilled To:\nJohn Smith\n123 Main Street\nNew York, NY 10001\n\nItems:\n1. Service A - $100.00\n2. Service B - $250.00\n\nTotal: $350.00"
                       },
                       "finish_reason": "stop"
                     }
