@@ -129,6 +129,7 @@
           }
         }
       },
+
       "ImageGenerationResponse": {
         "type": "object",
         "properties": {
@@ -144,34 +145,348 @@
               "properties": {
                 "url": {
                   "type": "string",
+                  "nullable": true,
                   "example": "https://cdn.qubrid.com/generated/image.webp",
                   "description": "URL of the generated image."
+                },
+                "b64_json": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "/9j/4AAQSkZJRgAB...",
+                  "description": "Base64-encoded image output when requested."
                 }
               }
             }
           }
         }
       },
+
       "ErrorResponse": {
         "type": "object",
+        "required": ["error"],
         "properties": {
           "error": {
-            "type": "string",
-            "example": "Invalid request parameters"
-          },
-          "message": {
-            "type": "string",
-            "example": "The 'prompt' field is required."
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Missing required parameter: 'prompt'."
+              },
+              "type": {
+                "type": "string",
+                "example": "invalid_request_error",
+                "description": "Machine-readable error category."
+              },
+              "code": {
+                "type": "string",
+                "example": "invalid_request",
+                "description": "Specific machine-readable error code."
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": "prompt",
+                "description": "The request field that caused the error, or null."
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123",
+                "description": "Unique request identifier for debugging and support."
+              }
+            }
+          }
+        }
+      },
+
+      "ModelNotFoundErrorResponse": {
+        "type": "object",
+        "description": "Returned when the specified image generation model does not exist or is not available.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "The model 'qwen-image-ultra' does not exist or is not available."
+              },
+              "type": {
+                "type": "string",
+                "example": "invalid_request_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "model_not_found"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": "model"
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "InsufficientQuotaErrorResponse": {
+        "type": "object",
+        "description": "Returned when the account does not have enough credits to complete the request.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Insufficient credits to process this request. Please recharge your account."
+              },
+              "type": {
+                "type": "string",
+                "example": "insufficient_quota"
+              },
+              "code": {
+                "type": "string",
+                "example": "insufficient_quota"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "RateLimitErrorResponse": {
+        "type": "object",
+        "description": "Returned when request rate limits are exceeded.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Rate limit exceeded. Please try again later."
+              },
+              "type": {
+                "type": "string",
+                "example": "rate_limit_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "rate_limit_exceeded"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "AuthenticationErrorResponse": {
+        "type": "object",
+        "description": "Returned when authentication fails.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Missing authentication credentials."
+              },
+              "type": {
+                "type": "string",
+                "example": "authentication_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "missing_api_key"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "PermissionErrorResponse": {
+        "type": "object",
+        "description": "Returned when the authenticated account does not have permission to access the resource.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Permission denied: You do not have permission to access this model."
+              },
+              "type": {
+                "type": "string",
+                "example": "permission_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "insufficient_quota"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "ServerErrorResponse": {
+        "type": "object",
+        "description": "Returned when an internal server error occurs.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "An unexpected error occurred while processing the request."
+              },
+              "type": {
+                "type": "string",
+                "example": "server_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "internal_error"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "BackendUnavailableErrorResponse": {
+        "type": "object",
+        "description": "Returned when the upstream image provider is temporarily unavailable or could not be reached.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "The backend service is temporarily unavailable."
+              },
+              "type": {
+                "type": "string",
+                "example": "server_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "backend_unavailable"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
+          }
+        }
+      },
+
+      "GatewayTimeoutErrorResponse": {
+        "type": "object",
+        "description": "Returned when the upstream image provider took too long to respond.",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["message", "type", "code", "request_id"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "The request timed out while waiting for the backend service."
+              },
+              "type": {
+                "type": "string",
+                "example": "server_error"
+              },
+              "code": {
+                "type": "string",
+                "example": "backend_error"
+              },
+              "param": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req-qubrid-abc123"
+              }
+            }
           }
         }
       }
     }
   },
+
   "security": [
     {
       "BearerAuth": []
     }
   ],
+
   "paths": {
     "/images/generations": {
       "post": {
@@ -247,7 +562,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad request - missing required fields, invalid values, or malformed input",
             "content": {
               "application/json": {
                 "schema": {
@@ -257,41 +572,41 @@
             }
           },
           "401": {
-            "description": "Unauthorized - invalid or missing API key",
+            "description": "Unauthorized - missing or invalid API key",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/AuthenticationErrorResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Insufficient credits to process the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientQuotaErrorResponse"
                 }
               }
             }
           },
           "403": {
-            "description": "Forbidden - access denied",
+            "description": "Forbidden - authenticated but not allowed to access this model or resource",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/PermissionErrorResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Endpoint not found",
+            "description": "Model not found - the specified image model does not exist or is not available",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ModelNotFoundErrorResponse"
                 }
               }
             }
@@ -301,7 +616,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/RateLimitErrorResponse"
                 }
               }
             }
@@ -311,17 +626,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ServerErrorResponse"
                 }
               }
             }
           },
-          "503": {
-            "description": "Service temporarily unavailable",
+          "502": {
+            "description": "Bad gateway - upstream image provider is unavailable or returned an error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/BackendUnavailableErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway timeout - upstream image provider took too long to respond",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayTimeoutErrorResponse"
                 }
               }
             }

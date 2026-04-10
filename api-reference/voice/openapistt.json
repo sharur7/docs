@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Qubrid OCR API",
+    "title": "Qubrid Speech-to-Text API",
     "version": "1.0.0",
-    "description": "Extract and recognize text from images using OCR-specialized vision models through the OpenAI-compatible chat completions API."
+    "description": "Transcribe audio into text using speech-to-text (STT) models."
   },
   "servers": [
     {
-      "url": "https://platform.qubrid.com/v1"
+      "url": "https://platform.qubrid.com/api/v1/qubridai"
     }
   ],
   "components": {
@@ -19,125 +19,13 @@
       }
     },
     "schemas": {
-      "OCRRequest": {
+      "TranscriptionResponse": {
         "type": "object",
-        "required": ["model", "messages"],
+        "description": "Successful transcription response.",
         "properties": {
-          "model": {
+          "text": {
             "type": "string",
-            "example": "Hunyuan/Hunyuan-OCR-1B",
-            "description": "The OCR-specialized vision model to use for text extraction."
-          },
-          "messages": {
-            "type": "array",
-            "description": "Chat-style input containing text instructions and image content for OCR processing.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "content": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "example": "text"
-                      },
-                      "text": {
-                        "type": "string",
-                        "example": "Extract all text from this image and preserve the layout structure."
-                      },
-                      "image_url": {
-                        "type": "object",
-                        "properties": {
-                          "url": {
-                            "type": "string",
-                            "example": "https://example.com/document.png",
-                            "description": "Publicly accessible image URL containing text to extract."
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "max_tokens": {
-            "type": "integer",
-            "default": 8192,
-            "description": "Maximum number of tokens to generate in the OCR response."
-          },
-          "temperature": {
-            "type": "number",
-            "default": 0.1,
-            "description": "Sampling temperature for text extraction (lower = more deterministic)."
-          },
-          "top_p": {
-            "type": "number",
-            "default": 1,
-            "description": "Nucleus sampling parameter for OCR output."
-          },
-          "stream": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to stream OCR output incrementally."
-          }
-        }
-      },
-
-      "OCRResponse": {
-        "type": "object",
-        "description": "Standard OpenAI-compatible chat completion response with extracted text.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "chatcmpl-ocr-123456"
-          },
-          "object": {
-            "type": "string",
-            "example": "chat.completion"
-          },
-          "created": {
-            "type": "integer",
-            "example": 1710000000
-          },
-          "model": {
-            "type": "string",
-            "example": "Hunyuan/Hunyuan-OCR-1B"
-          },
-          "choices": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "index": {
-                  "type": "integer",
-                  "example": 0
-                },
-                "message": {
-                  "type": "object",
-                  "properties": {
-                    "role": {
-                      "type": "string",
-                      "example": "assistant"
-                    },
-                    "content": {
-                      "type": "string",
-                      "example": "Header: Important Document\n\nSection 1: Introduction\nThis document contains important information...\n\nSection 2: Details\nKey points and data extracted from the image..."
-                    }
-                  }
-                },
-                "finish_reason": {
-                  "type": "string",
-                  "example": "stop"
-                }
-              }
-            }
+            "example": "Today is a wonderful day to build something people love!"
           }
         }
       },
@@ -152,28 +40,24 @@
             "properties": {
               "message": {
                 "type": "string",
-                "example": "Missing required parameter: 'messages'."
+                "example": "Missing required parameter: 'file'."
               },
               "type": {
                 "type": "string",
-                "example": "invalid_request_error",
-                "description": "Machine-readable error category."
+                "example": "invalid_request_error"
               },
               "code": {
                 "type": "string",
-                "example": "invalid_request",
-                "description": "Specific machine-readable error code."
+                "example": "invalid_request"
               },
               "param": {
                 "type": "string",
                 "nullable": true,
-                "example": "messages",
-                "description": "The request field that caused the error, or null."
+                "example": "file"
               },
               "request_id": {
                 "type": "string",
-                "example": "req-qubrid-abc123",
-                "description": "Unique request identifier for debugging and support."
+                "example": "req-qubrid-abc123"
               }
             }
           }
@@ -182,7 +66,6 @@
 
       "ModelNotFoundErrorResponse": {
         "type": "object",
-        "description": "Returned when the specified OCR model does not exist or is not available.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -191,7 +74,7 @@
             "properties": {
               "message": {
                 "type": "string",
-                "example": "The model 'ocr-ultra' does not exist or is not available."
+                "example": "The model 'whisper-ultra' does not exist or is not available."
               },
               "type": {
                 "type": "string",
@@ -215,44 +98,8 @@
         }
       },
 
-      "ContextLengthExceededErrorResponse": {
-        "type": "object",
-        "description": "Returned when the input exceeds the model's maximum context window.",
-        "required": ["error"],
-        "properties": {
-          "error": {
-            "type": "object",
-            "required": ["message", "type", "code", "request_id"],
-            "properties": {
-              "message": {
-                "type": "string",
-                "example": "Context length exceeded: The input exceeds the model's maximum context length."
-              },
-              "type": {
-                "type": "string",
-                "example": "invalid_request_error"
-              },
-              "code": {
-                "type": "string",
-                "example": "context_length_exceeded"
-              },
-              "param": {
-                "type": "string",
-                "nullable": true,
-                "example": "messages"
-              },
-              "request_id": {
-                "type": "string",
-                "example": "req-qubrid-abc123"
-              }
-            }
-          }
-        }
-      },
-
       "InsufficientQuotaErrorResponse": {
         "type": "object",
-        "description": "Returned when the account does not have enough credits to complete the request.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -261,7 +108,7 @@
             "properties": {
               "message": {
                 "type": "string",
-                "example": "Insufficient credits to process this request. Please recharge your account."
+                "example": "Insufficient credits to process this request."
               },
               "type": {
                 "type": "string",
@@ -287,7 +134,6 @@
 
       "RateLimitErrorResponse": {
         "type": "object",
-        "description": "Returned when request rate limits are exceeded.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -322,7 +168,6 @@
 
       "AuthenticationErrorResponse": {
         "type": "object",
-        "description": "Returned when authentication fails.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -357,7 +202,6 @@
 
       "PermissionErrorResponse": {
         "type": "object",
-        "description": "Returned when the authenticated account does not have permission to access the resource.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -392,7 +236,6 @@
 
       "ServerErrorResponse": {
         "type": "object",
-        "description": "Returned when an internal server error occurs.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -427,7 +270,6 @@
 
       "BackendUnavailableErrorResponse": {
         "type": "object",
-        "description": "Returned when the upstream OCR provider is temporarily unavailable or could not be reached.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -462,7 +304,6 @@
 
       "GatewayTimeoutErrorResponse": {
         "type": "object",
-        "description": "Returned when the upstream OCR provider took too long to respond.",
         "required": ["error"],
         "properties": {
           "error": {
@@ -496,20 +337,18 @@
       }
     }
   },
-
   "security": [
     {
       "BearerAuth": []
     }
   ],
-
   "paths": {
-    "/chat/completions": {
+    "/audio/transcribe": {
       "post": {
-        "summary": "Extract Text from Images with OCR",
-        "description": "Use specialized OCR vision models to extract and recognize text from images via the OpenAI-compatible chat completions API.",
-        "operationId": "createOCRCompletion",
-        "tags": ["OCR"],
+        "summary": "Transcribe Audio",
+        "description": "Convert speech audio into text using STT models.",
+        "operationId": "createTranscription",
+        "tags": ["Speech-to-Text"],
         "security": [
           {
             "BearerAuth": []
@@ -518,62 +357,20 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/OCRRequest"
-              },
-              "examples": {
-                "Basic OCR": {
-                  "summary": "Extract text from a document image",
-                  "value": {
-                    "model": "Hunyuan/Hunyuan-OCR-1B",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "Extract all text from this image and preserve the layout structure."
-                          },
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/document.png"
-                            }
-                          }
-                        ]
-                      }
-                    ],
-                    "max_tokens": 8192,
-                    "temperature": 0.1,
-                    "top_p": 1,
-                    "stream": false
-                  }
-                },
-                "OCR with Layout": {
-                  "summary": "Extract text preserving document layout and structure",
-                  "value": {
-                    "model": "Hunyuan/Hunyuan-OCR-1B",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "Extract all text from this document image while preserving the original layout, structure, and formatting."
-                          },
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/form.jpg"
-                            }
-                          }
-                        ]
-                      }
-                    ],
-                    "max_tokens": 8192,
-                    "temperature": 0.05,
-                    "stream": false
+                "type": "object",
+                "required": ["file", "model"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio file to transcribe (wav, mp3, etc.)"
+                  },
+                  "model": {
+                    "type": "string",
+                    "example": "openai/whisper-large-v3",
+                    "description": "STT model to use."
                   }
                 }
               }
@@ -582,33 +379,20 @@
         },
         "responses": {
           "200": {
-            "description": "OCR text extraction completed successfully",
+            "description": "Transcription successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OCRResponse"
+                  "$ref": "#/components/schemas/TranscriptionResponse"
                 },
                 "example": {
-                  "id": "chatcmpl-ocr-123456",
-                  "object": "chat.completion",
-                  "created": 1710000000,
-                  "model": "Hunyuan/Hunyuan-OCR-1B",
-                  "choices": [
-                    {
-                      "index": 0,
-                      "message": {
-                        "role": "assistant",
-                        "content": "INVOICE #2024-001\nDate: March 30, 2024\n\nBilled To:\nJohn Smith\n123 Main Street\nNew York, NY 10001\n\nItems:\n1. Service A - $100.00\n2. Service B - $250.00\n\nTotal: $350.00"
-                      },
-                      "finish_reason": "stop"
-                    }
-                  ]
+                  "text": "Today is a wonderful day to build something people love!"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - missing required fields, invalid values, or malformed JSON",
+            "description": "Bad request - missing file, model, or invalid input",
             "content": {
               "application/json": {
                 "schema": {
@@ -628,7 +412,7 @@
             }
           },
           "402": {
-            "description": "Insufficient credits to process the request",
+            "description": "Insufficient credits",
             "content": {
               "application/json": {
                 "schema": {
@@ -638,7 +422,7 @@
             }
           },
           "403": {
-            "description": "Forbidden - authenticated but not allowed to access this model or resource",
+            "description": "Forbidden - access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -648,21 +432,11 @@
             }
           },
           "404": {
-            "description": "Model not found - the specified OCR model does not exist or is not available",
+            "description": "Model not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModelNotFoundErrorResponse"
-                }
-              }
-            }
-          },
-          "413": {
-            "description": "Payload too large - input exceeds the model context window",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContextLengthExceededErrorResponse"
                 }
               }
             }
@@ -688,7 +462,7 @@
             }
           },
           "502": {
-            "description": "Bad gateway - upstream OCR provider is unavailable or returned an error",
+            "description": "Bad gateway - upstream provider unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -698,7 +472,7 @@
             }
           },
           "504": {
-            "description": "Gateway timeout - upstream OCR provider took too long to respond",
+            "description": "Gateway timeout - upstream provider timeout",
             "content": {
               "application/json": {
                 "schema": {

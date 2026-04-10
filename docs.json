@@ -237,7 +237,8 @@
           {
             "group": "Voice",
             "pages": [
-              "api-reference/voice/create"
+              "api-reference/voice/create",
+              "api-reference/voice/createstt"
             ]
           },
           {
