@@ -23,7 +23,8 @@
         "type": "object",
         "required": [
           "model",
-          "text"
+          "text",
+          "voice"
         ],
         "properties": {
           "model": {
